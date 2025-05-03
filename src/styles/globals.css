@@ -6,6 +6,4 @@
   themes: light --default, dark --prefersdark, corporate;
 }
 
-body {
-  overflow-y: scroll;
-}
+

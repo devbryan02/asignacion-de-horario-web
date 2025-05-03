@@ -1,8 +1,10 @@
 import CursoDataTable from "@/feactures/curso/CursoDataTable";
 import { fetchCursos } from "@/feactures/curso/CursoService";
+import { Aula } from "@/types/Aula";
+import { Curso } from "@/types/Curso";
 
 async function CursoPage() {
-    let cursos = [];
+    let cursos: Curso[] = [];
 
     try {
         cursos = await fetchCursos();
@@ -16,9 +18,7 @@ async function CursoPage() {
     }
 
     return (
-        <div className="w-full">
-            <CursoDataTable cursos={cursos} />
-        </div>
+        <CursoDataTable cursos={cursos} />
     );
 }
 

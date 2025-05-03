@@ -1,7 +1,9 @@
-function AulaPage() {
-    return ( 
-        <h2>Aula XDXDXDX</h2>
-     );
-}
+import AulaDataTable from "@/feactures/aula/AulaDataTable";
 
+async function AulaPage() {
+
+    return ( 
+        <AulaDataTable/>
+    )
+}
 export default AulaPage;

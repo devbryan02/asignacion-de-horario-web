@@ -31,7 +31,7 @@ export const createAula = async (aula: Aula) : Promise<Aula> => {
     }
 };
 
-export const deleteAula = async (id: number) : Promise<void> => {
+export const deleteAula = async (id: string) : Promise<void> => {
     try {
         await apiClient.delete(`/aula/${id}`);
     } catch (error) {

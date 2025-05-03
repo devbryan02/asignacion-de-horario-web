@@ -1,6 +1,7 @@
+import DocenteDataTable from "@/feactures/docente/DocenteDataTable";
 function DocentePage() {
     return ( 
-        <h2>Docentes XDXDX</h2>
+        <DocenteDataTable/>
      );
 }
 

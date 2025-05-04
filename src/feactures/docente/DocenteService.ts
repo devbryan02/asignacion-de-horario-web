@@ -1,7 +1,7 @@
 import apiClient from "@/lib/axios";
 import { Docente } from "@/types/Docente";
 import { RestriccionRequest } from "@/types/RestriccionRequest";
-import { RestriccionResponse } from "@/types/RestriccionResponse";
+import { RegistroRestriccionResponse } from "@/types/RegistroRestriccionResponse";
 import { UUID } from "crypto";
 
 export async function fetchDocentes() : Promise<Docente[]> {
@@ -24,7 +24,7 @@ export async function createDocente(docente: Docente) : Promise<Docente> {
   }
 }
 
-export async function createRestriccionDocente(restriccion: RestriccionRequest): Promise<RestriccionResponse> {
+export async function createRestriccionDocente(restriccion: RestriccionRequest): Promise<RegistroRestriccionResponse> {
   try {
     const formattedRestriccion = {
       ...restriccion,
@@ -32,7 +32,7 @@ export async function createRestriccionDocente(restriccion: RestriccionRequest):
       horaFin: restriccion.horaFin.substring(0, 5),
     };
 
-    const response = await apiClient.post<RestriccionResponse>("/restriccion-docente", formattedRestriccion);
+    const response = await apiClient.post<RegistroRestriccionResponse>("/restriccion-docente", formattedRestriccion);
 
     // Ya no lanzamos error aquí
     return response.data;

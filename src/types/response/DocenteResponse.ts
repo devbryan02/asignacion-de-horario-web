@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { RestriccionDocente } from "./RestriccionDocente";
+import { RestriccionDocente } from "../RestriccionDocente";
 
 // Interfaz principal para el docente
 export interface Docente {

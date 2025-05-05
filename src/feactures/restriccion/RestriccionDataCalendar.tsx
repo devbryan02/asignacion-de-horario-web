@@ -3,8 +3,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { fetchRestriccionByDocente } from "./RestriccionService";
 import { fetchDocentes } from "@/feactures/docente/DocenteService";
-import { RestriccionResponse } from "@/types/RestriccionResponse";
-import { Docente } from "@/types/Docente";
+import { RestriccionResponse } from "@/types/response/RestriccionResponse";
+import { Docente } from "@/types/response/DocenteResponse";
 import { UUID } from "crypto";
 import {
     Clock,
@@ -208,8 +208,7 @@ function RestriccionDataCalendar({ initialDocenteId }: RestriccionDataCalendarPr
                                                             <button
                                                                 key={docente.id}
                                                                 className={`w-full px-4 py-3 text-left hover:bg-base-200 flex items-center gap-2 border-b border-base-200 last:border-none
-                        ${selectedDocenteId === docente.id ? 'bg-primary/10 text-primary' : ''}
-                      `}
+                                                                            ${selectedDocenteId === docente.id ? 'bg-primary/10 text-primary' : ''}`}
                                                                 onClick={() => handleSelectDocente(docente)}
                                                             >
                                                                 <User size={16} />

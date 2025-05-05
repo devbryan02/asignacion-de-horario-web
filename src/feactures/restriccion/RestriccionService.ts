@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import { RestriccionResponse } from "@/types/RestriccionResponse";
+import { RestriccionResponse } from "@/types/response/RestriccionResponse";
 import { UUID } from "crypto";
 
 export async function fetchRestriccionByDocente(docenteId: UUID): Promise<RestriccionResponse[]> {

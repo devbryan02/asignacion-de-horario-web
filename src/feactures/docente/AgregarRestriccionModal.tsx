@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { PlusCircle, Clock, AlertCircle, X, Calendar, Clock3, Shield } from "lucide-react";
 import { createRestriccionDocente } from "./DocenteService";
-import { RestriccionRequest } from "@/types/RestriccionRequest";
+import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { DiaSemana } from "@/types/DiaSemana";
 import { TipoRestriccion } from "@/types/TipoRestriccion";
 import toast from "react-hot-toast";

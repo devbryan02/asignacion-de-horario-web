@@ -1,6 +1,6 @@
 "use client";
 
-import { Aula } from "@/types/Aula";
+import { Aula } from "@/types/AulaResponse";
 import { Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import AgregarAulaModal from "./AgregarAulaModal";

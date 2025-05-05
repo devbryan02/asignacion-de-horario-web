@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
-import { DiaSemana } from "./DiaSemana";
-import { TipoRestriccion } from "./TipoRestriccion";
+import { DiaSemana } from "../DiaSemana";
+import { TipoRestriccion } from "../TipoRestriccion";
 
 export type RestriccionRequest = {
     diaSemana: DiaSemana; // Formato "LUNES", "MARTES", etc.

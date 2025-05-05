@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import { Aula } from "@/types/Aula";
+import { Aula } from "@/types/AulaResponse";
 
 export const fetchAulas = async () : Promise<Aula[]>  => {
     try {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PlusCircle } from "lucide-react";
-import { Aula } from "@/types/Aula";
+import { Aula } from "@/types/AulaResponse";
 import { createAula } from "./AulaService";
 import toast from "react-hot-toast";
 

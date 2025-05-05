@@ -1,6 +1,6 @@
 "use client";
 
-import { Docente } from "@/types/Docente";
+import { Docente } from "@/types/response/DocenteResponse";
 import { useEffect, useState } from "react";
 import { fetchDocentes } from "./DocenteService";
 import toast from "react-hot-toast";

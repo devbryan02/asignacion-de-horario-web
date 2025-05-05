@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { PlusCircle, User2, Clock, Briefcase, Building2, AlertCircle, X } from "lucide-react";
-import { Docente } from "@/types/Docente";
+import { Docente } from "@/types/response/DocenteResponse";
 import { createDocente } from "./DocenteService";
 import toast from "react-hot-toast";
-import { DocenteRequest } from "@/types/DocenteRequest";
+import { DocenteRequest } from "@/types/request/DocenteRequest";
 import MultipleSelect from "./MultipleSelect";
 
 interface AgregarDocenteModalProps {

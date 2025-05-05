@@ -1,9 +1,11 @@
 
+import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <h1>Hola xd</h1>
-      <button className="btn m-6">click me</button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <Link href="/dashboard" className="btn btn-primary">Ver dashboard</Link>
+      </div>
     </>
   );
 }

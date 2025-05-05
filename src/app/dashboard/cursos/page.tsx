@@ -1,4 +1,4 @@
-import CursoDataTable from "@/feactures/curso/CursoDataTable";
+import CursoDataTable from "@/feactures/curso/components/CursoDataTable";
 
 async function CursoPage() {
     return (

@@ -1,4 +1,4 @@
-import RestriccionDataCalendar from "@/feactures/restriccion/RestriccionDataCalendar";
+import RestriccionDataCalendar from "@/feactures/restriccion/components/RestriccionDataCalendar";
 
 function RestriccionPage() {
     return ( 

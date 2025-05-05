@@ -1,4 +1,4 @@
-import AulaDataTable from "@/feactures/aula/AulaDataTable";
+import AulaDataTable from "@/feactures/aula/components/AulaDataTable";
 
 async function AulaPage() {
 

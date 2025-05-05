@@ -1,4 +1,4 @@
-import DocenteDataTable from "@/feactures/docente/DocenteDataTable";
+import DocenteDataTable from "@/feactures/docente/components/DocenteDataTable";
 function DocentePage() {
     return ( 
         <DocenteDataTable/>

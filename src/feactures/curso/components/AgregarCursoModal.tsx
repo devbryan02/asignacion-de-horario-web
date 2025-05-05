@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { PlusCircle, Book, Loader2, AlertCircle, X } from "lucide-react";
-import { createCurso } from "./CursoService";
+import { createCurso } from "../CursoService";
 import { CursoRequest } from "@/types/request/CursoRequest";
 import { UnidadAcademica } from "@/types/UnidadAcademica";
 import { fetchUnidadAcademica } from "@/feactures/unidadad-academica/UnidadAcademicaService";

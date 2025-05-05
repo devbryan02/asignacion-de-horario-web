@@ -1,6 +1,6 @@
 import { UnidadAcademica } from "@/types/UnidadAcademica";
 import { useEffect, useState } from "react";
-import { fetchUnidadAcademica } from "../unidadad-academica/UnidadAcademicaService";
+import { fetchUnidadAcademica } from "../../unidadad-academica/UnidadAcademicaService";
 import { Check } from "lucide-react";
 
 function MultipleSelect({ 

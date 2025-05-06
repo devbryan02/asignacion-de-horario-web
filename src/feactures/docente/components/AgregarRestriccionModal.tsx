@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PlusCircle, Clock, AlertCircle, X, Calendar, Clock3, Shield } from "lucide-react";
+import { PlusCircle, Clock, AlertCircle, X, Calendar, Clock3, Shield, Loader2 } from "lucide-react";
 import { createRestriccionDocente } from "../DocenteService";
 import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { DiaSemana } from "@/types/DiaSemana";
@@ -67,6 +67,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
     const closeModal = () => {
         setIsOpen(false);
         setCurrentStep(1);
+        setErrorMensaje(null);
         if (typeof document !== "undefined") {
             document.body.style.overflow = "";
         }
@@ -86,6 +87,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
 
         try {
             setIsLoading(true);
+            setErrorMensaje(null);
             const toastId = toast.loading("Agregando restricción...");
 
             const restriccionCompleta: RestriccionRequest = {
@@ -119,77 +121,81 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         switch (currentStep) {
             case 1:
                 return (
-                    <div className="space-y-4">
-                        <h4 className="font-medium text-base">Paso 1: Seleccione el día y tipo de restricción</h4>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium flex items-center gap-2">
-                                    <Calendar size={16} className="text-primary" />
-                                    Día de la semana
-                                </span>
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                                <Calendar size={16} className="text-primary" />
+                                Día de la semana
                             </label>
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <div className="grid grid-cols-7 gap-1.5">
                                 {diasSemana.map(dia => (
-                                    <label
+                                    <button
                                         key={dia}
-                                        className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all
+                                        type="button"
+                                        className={`py-2 px-1 rounded-md border transition-colors text-sm font-medium
                                             ${formData.diaSemana === dia
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-base-200 hover:border-primary/50'
+                                                ? 'border-primary bg-primary/10 text-primary'
+                                                : 'border-base-300 hover:border-primary/40 text-base-content/80 hover:bg-base-200/70'
                                             }`}
+                                        onClick={() => setFormData(prev => ({
+                                            ...prev,
+                                            diaSemana: dia
+                                        }))}
+                                        disabled={isLoading}
                                     >
-                                        <input
-                                            type="radio"
-                                            name="diaSemana"
-                                            value={dia}
-                                            className="radio radio-primary hidden"
-                                            checked={formData.diaSemana === dia}
-                                            onChange={(e) => setFormData(prev => ({
-                                                ...prev,
-                                                diaSemana: e.target.value as DiaSemana
-                                            }))}
-                                        />
-                                        <span className="text-sm">
-                                            {dia.charAt(0) + dia.slice(1).toLowerCase()}
+                                        {dia.charAt(0)}
+                                        <span className="hidden sm:inline">
+                                            {dia.substring(1, 3).toLowerCase()}
                                         </span>
-                                    </label>
+                                    </button>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="form-control mt-6">
-                            <label className="label">
-                                <span className="label-text font-medium flex items-center gap-2">
-                                    <Shield size={16} className="text-primary" />
-                                    Tipo de restricción
-                                </span>
+                        <div className="space-y-3 mt-6">
+                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                                <Shield size={16} className="text-primary" />
+                                Tipo de restricción
                             </label>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3">
                                 {tiposRestriccion.map(tipo => (
-                                    <label
+                                    <button
                                         key={tipo}
-                                        className={`flex items-center justify-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all
+                                        type="button"
+                                        className={`py-3 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-2
                                             ${formData.tipoRestriccion === tipo
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-base-200 hover:border-primary/50'
+                                                ? tipo === "DISPONIBLE"
+                                                    ? 'border-success/30 bg-success/10 text-success'
+                                                    : 'border-error/30 bg-error/10 text-error'
+                                                : 'border-base-300 text-base-content/70 hover:border-base-400'
                                             }`}
+                                        onClick={() => setFormData(prev => ({
+                                            ...prev,
+                                            tipoRestriccion: tipo
+                                        }))}
+                                        disabled={isLoading}
                                     >
-                                        <input
-                                            type="radio"
-                                            name="tipoRestriccion"
-                                            value={tipo}
-                                            className="radio radio-primary hidden"
-                                            checked={formData.tipoRestriccion === tipo}
-                                            onChange={() => setFormData(prev => ({
-                                                ...prev,
-                                                tipoRestriccion: tipo as TipoRestriccion
-                                            }))}
-                                        />
-                                        <span className={`text-sm font-medium ${tipo === "DISPONIBLE" ? "text-success" : "text-error"
-                                            }`}>
-                                            {tipo === "DISPONIBLE" ? "✓ Disponible" : "⛔ Bloqueado"}
-                                        </span>
-                                    </label>
+                                        {tipo === "DISPONIBLE" ? (
+                                            <>
+                                                <span className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center text-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                                    </svg>
+                                                </span>
+                                                <span className="font-medium">Disponible</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="w-5 h-5 rounded-full bg-error/20 flex items-center justify-center text-error">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </span>
+                                                <span className="font-medium">Bloqueado</span>
+                                            </>
+                                        )}
+                                    </button>
                                 ))}
                             </div>
                         </div>
@@ -197,77 +203,87 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
                 );
             case 2:
                 return (
-                    <div className="space-y-4">
-                        <h4 className="font-medium text-base">Paso 2: Seleccione el rango horario</h4>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-medium flex items-center gap-2">
-                                    <Clock3 size={16} className="text-primary" />
-                                    Rango de horas
-                                </span>
+                    <div className="space-y-6">
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                                <Clock3 size={16} className="text-primary" />
+                                Rango de horas
                             </label>
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-base-content/70">
-                                        Desde
+                                    <label className="text-xs font-medium text-base-content/70">
+                                        Hora de inicio
                                     </label>
-                                    <select
-                                        className="select select-bordered w-full focus:select-primary"
-                                        name="horaInicio"
-                                        value={formData.horaInicio}
-                                        onChange={handleInputChange}
-                                        disabled={isLoading}
-                                    >
-                                        {horasDisponibles.map(hora => (
-                                            <option key={`inicio-${hora}`} value={hora}>
-                                                {formatHora(hora)}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-base-content/70">
-                                        Hasta
-                                    </label>
-                                    <select
-                                        className="select select-bordered w-full focus:select-primary"
-                                        name="horaFin"
-                                        value={formData.horaFin}
-                                        onChange={handleInputChange}
-                                        disabled={isLoading}
-                                    >
-                                        {horasDisponibles
-                                            .filter(hora => hora > formData.horaInicio)
-                                            .map(hora => (
-                                                <option key={`fin-${hora}`} value={hora}>
+                                    <div className="relative">
+                                        <select
+                                            className="appearance-none w-full h-10 pl-3 pr-8 rounded-md border border-base-300 bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+                                            name="horaInicio"
+                                            value={formData.horaInicio}
+                                            onChange={handleInputChange}
+                                            disabled={isLoading}
+                                        >
+                                            {horasDisponibles.map(hora => (
+                                                <option key={`inicio-${hora}`} value={hora}>
                                                     {formatHora(hora)}
                                                 </option>
                                             ))}
-                                    </select>
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-base-content/50">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-base-content/70">
+                                        Hora de fin
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            className="appearance-none w-full h-10 pl-3 pr-8 rounded-md border border-base-300 bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+                                            name="horaFin"
+                                            value={formData.horaFin}
+                                            onChange={handleInputChange}
+                                            disabled={isLoading}
+                                        >
+                                            {horasDisponibles
+                                                .filter(hora => hora > formData.horaInicio)
+                                                .map(hora => (
+                                                    <option key={`fin-${hora}`} value={hora}>
+                                                        {formatHora(hora)}
+                                                    </option>
+                                                ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-base-content/50">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-base-200 p-4 rounded-lg mt-6 border-l-4 border-primary">
+                        <div className={`p-4 rounded-md ${
+                            formData.tipoRestriccion === "DISPONIBLE" 
+                                ? 'bg-success/5 border border-success/20' 
+                                : 'bg-error/5 border border-error/20'
+                        }`}>
                             <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                                <Clock size={16} className="text-primary" />
-                                Resumen de la restricción:
+                                <Clock size={16} className={formData.tipoRestriccion === "DISPONIBLE" ? 'text-success' : 'text-error'} />
+                                <span className={formData.tipoRestriccion === "DISPONIBLE" ? 'text-success' : 'text-error'}>
+                                    Resumen de la restricción
+                                </span>
                             </h4>
-                            <p className="text-sm leading-relaxed">
-                                <span className={`font-medium ${formData.tipoRestriccion === "DISPONIBLE"
-                                        ? "text-success"
-                                        : "text-error"
-                                    }`}>
-                                    {formData.tipoRestriccion === "DISPONIBLE" ? "✓ Disponible" : "⛔ Bloqueado"}
-                                </span>
-                                {" "} los días {" "}
-                                <span className="font-medium">
+                            <p className="text-sm leading-relaxed text-base-content/90">
+                                Este horario quedará <span className={`font-semibold ${
+                                    formData.tipoRestriccion === "DISPONIBLE" ? "text-success" : "text-error"
+                                }`}>
+                                    {formData.tipoRestriccion === "DISPONIBLE" ? "disponible" : "bloqueado"}
+                                </span> los días <span className="font-medium">
                                     {formData.diaSemana.charAt(0) + formData.diaSemana.slice(1).toLowerCase()}
-                                </span>
-                                {" "} de {" "}
-                                <span className="font-medium">{formatHora(formData.horaInicio)}</span>
-                                {" "} a {" "}
-                                <span className="font-medium">{formatHora(formData.horaFin)}</span>
+                                </span> de <span className="font-medium">{formatHora(formData.horaInicio)}</span> a <span className="font-medium">{formatHora(formData.horaFin)}</span>.
                             </p>
                         </div>
                     </div>
@@ -280,69 +296,90 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
     return (
         <>
             <button
-                className="btn btn-sm btn-outline hover:btn-primary flex items-center gap-2 transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-md text-base-content/70 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                title={`Agregar restricción para ${docenteNombre}`}
                 onClick={openModal}
             >
-                <PlusCircle size={14} />
-                Agregar Restricción
+                <Calendar size={15} />
             </button>
 
             {isOpen && (
-                <div className="modal modal-open">
-                    <div className="modal-box max-w-2xl relative">
-                        <div className="flex flex-col gap-2 mb-6">
-                            <div className="flex items-center gap-2">
-                                <Clock size={20} className="text-primary" />
-                                <h3 className="font-bold text-xl">Nueva Restricción Horaria</h3>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 backdrop-blur-sm">
+                    <div className="w-full max-w-lg bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
+                        {/* Modal header */}
+                        <div className="px-6 pt-5 pb-4 border-b border-base-200">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-200">
+                                    <Clock size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-base-content">Nueva Restricción Horaria</h3>
+                                    <p className="text-sm text-base-content/70">
+                                        Para el docente <span className="font-medium text-primary">{docenteNombre}</span>
+                                    </p>
+                                </div>
                             </div>
-                            <div className="divider mt-0 mb-2"></div>
-                            <p className="text-base-content/70">
-                                Agregue una restricción horaria para {" "}
-                                <span className="font-medium text-primary">{docenteNombre}</span>
-                            </p>
-
+                            
                             {/* Progress Steps */}
-                            <div className="w-full flex items-center justify-center gap-4 mt-4">
+                            <div className="flex items-center justify-center gap-2 mt-5">
                                 {[1, 2].map((step) => (
-                                    <button
-                                        key={step}
-                                        onClick={() => setCurrentStep(step)}
-                                        className={`w-24 h-1 rounded-full transition-all ${step === currentStep
-                                                ? 'bg-primary'
-                                                : step < currentStep
-                                                    ? 'bg-primary/40'
-                                                    : 'bg-base-300'
+                                    <div key={step} className="flex items-center">
+                                        {step > 1 && (
+                                            <div className={`w-12 h-0.5 ${
+                                                step <= currentStep ? 'bg-amber-400' : 'bg-base-300'
+                                            }`} />
+                                        )}
+                                        <button
+                                            onClick={() => step < currentStep && setCurrentStep(step)}
+                                            className={`flex flex-col items-center ${
+                                                step <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'
                                             }`}
-                                        aria-label={`Paso ${step}`}
-                                    />
+                                            disabled={step > currentStep || isLoading}
+                                        >
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
+                                                step === currentStep
+                                                    ? 'border-amber-400 bg-amber-400 text-white'
+                                                    : step < currentStep
+                                                        ? 'border-amber-400 text-amber-500 bg-amber-50'
+                                                        : 'border-base-300 text-base-content/50 bg-base-100'
+                                                }`}
+                                            >
+                                                {step}
+                                            </div>
+                                            <span className={`text-xs mt-1.5 ${
+                                                step === currentStep ? 'text-amber-600 font-medium' : 'text-base-content/60'
+                                            }`}>
+                                                {step === 1 ? 'Tipo y día' : 'Horario'}
+                                            </span>
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>
-
-                        <div className="py-4">
+                        
+                        {/* Form Content */}
+                        <div className="px-6 py-5">
                             {renderStepContent()}
                         </div>
-
+                        
+                        {/* Error message */}
                         {errorMensaje && (
-                            <div className="alert alert-error shadow-lg mb-4">
-                                <div className="flex items-center gap-2">
-                                    <AlertCircle className="h-5 w-5" />
-                                    <span>{errorMensaje}</span>
-                                </div>
-                                <button
-                                    className="btn btn-ghost btn-sm"
+                            <div className="mx-6 text-start mb-4 p-3 rounded-md bg-error/10 border border-error/20 flex items-center gap-3">
+                                <AlertCircle size={18} className="text-error" />
+                                <div className="flex-1 text-sm text-error">{errorMensaje}</div>
+                                <button 
+                                    className="p-1 rounded-md hover:bg-error/10"
                                     onClick={() => setErrorMensaje(null)}
                                 >
-                                    <X className="h-4 w-4" />
+                                    <X size={14} className="text-error" />
                                 </button>
                             </div>
                         )}
-
-                        <div className="divider my-4"></div>
-
-                        <div className="modal-action gap-3">
-                            <button
-                                className="btn btn-ghost hover:bg-base-200"
+                        
+                        {/* Modal footer */}
+                        <div className="px-6 py-4 bg-base-200/50 border-t border-base-200 flex justify-end gap-3">
+                            <button 
+                                className="px-4 py-2 rounded-md text-sm font-medium text-base-content/70 hover:bg-base-300 hover:text-base-content transition-colors" 
                                 onClick={closeModal}
                                 disabled={isLoading}
                             >
@@ -350,30 +387,37 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
                             </button>
 
                             {currentStep === 1 ? (
-                                <button
-                                    className="btn btn-primary hover:shadow-lg transition-all duration-200"
+                                <button 
+                                    className="px-4 py-2 rounded-md text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors"
                                     onClick={() => setCurrentStep(2)}
+                                    disabled={isLoading}
                                 >
                                     Siguiente
                                 </button>
                             ) : (
-                                <button
-                                    className={`btn btn-primary hover:shadow-lg transition-all duration-200 ${isLoading ? 'loading' : ''
-                                        }`}
+                                <button 
+                                    className="px-4 py-2 rounded-md text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center gap-2"
                                     onClick={handleSubmit}
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? 'Guardando...' : 'Guardar Restricción'}
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 size={16} className="animate-spin" />
+                                            <span>Guardando...</span>
+                                        </>
+                                    ) : 'Guardar Restricción'}
                                 </button>
                             )}
                         </div>
 
-                        <button
-                            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        {/* Close button */}
+                        <button 
+                            className="absolute right-4 top-4 w-8 h-8 rounded-full flex items-center justify-center text-base-content/60 hover:bg-base-200 hover:text-base-content transition-colors"
                             onClick={closeModal}
                             disabled={isLoading}
+                            aria-label="Cerrar"
                         >
-                            ✕
+                            <X size={18} />
                         </button>
                     </div>
                 </div>

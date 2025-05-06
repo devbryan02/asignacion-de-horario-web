@@ -1,92 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { PlusCircle, X, SchoolIcon, Loader2 } from "lucide-react";
-import { Aula } from "@/types/AulaResponse";
-import { createAula } from "../AulaService";
-import toast from "react-hot-toast";
-
+import { PlusCircle, X, School as SchoolIcon, Loader2 } from "lucide-react";
+import { useCreateAula } from "../hooks/useCreateAula";
 
 interface AgregarAulaModalProps {
   onAulaCreated?: () => void;
 }
 
 function AgregarAulaModal({ onAulaCreated }: AgregarAulaModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<Partial<Aula>>({
-    nombre: "",
-    capacidad: 50,
-    tipo: ""
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "capacidad" ? parseInt(value) || 0 : value
-    });
-  };
-
-  const openModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsOpen(true);
-    if (typeof document !== "undefined") {
-      document.body.style.overflow = "hidden";
-    }
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-    if (typeof document !== "undefined") {
-      document.body.style.overflow = "";
-    }
-    // Resetear el formulario al cerrar
-    setFormData({
-      nombre: "",
-      capacidad: 50,
-      tipo: ""
-    });
-  };
-
-  const handleSubmit = async () => {
-    if (!formData.nombre?.trim()) {
-      toast.error("El nombre del aula es requerido");
-      return;
-    }
-    
-    if (!formData.tipo) {
-      toast.error("Debe seleccionar un tipo de aula");
-      return;
-    }
-    
-    if (!formData.capacidad || formData.capacidad <= 0) {
-      toast.error("La capacidad debe ser mayor a 0");
-      return;
-    }
-    
-    try {
-      setIsLoading(true);
-      
-      const toastId = toast.loading("Creando aula...");
-      
-      await createAula(formData as Aula);
-      
-      toast.success("Aula creada exitosamente", {
-        id: toastId,
-      });
-      if (onAulaCreated) {
-        onAulaCreated();
-      }
-      
-      closeModal();
-    } catch (error) {
-      console.error("Error al crear el aula:", error);
-      toast.error("Error al crear el aula: " + (error instanceof Error ? error.message : "Error desconocido"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    isOpen,
+    isLoading,
+    formData,
+    handleInputChange,
+    openModal,
+    closeModal,
+    handleSubmit
+  } = useCreateAula({ onAulaCreated });
 
   return (
     <>

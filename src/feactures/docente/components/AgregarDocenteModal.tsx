@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusCircle, User2, Clock, Briefcase, Building2, AlertCircle, X } from "lucide-react";
+import { PlusCircle, User2, Clock, Briefcase, Building2, AlertCircle, X, Loader2 } from "lucide-react";
 import { Docente } from "@/types/response/DocenteResponse";
 import { createDocente } from "../DocenteService";
 import toast from "react-hot-toast";
@@ -150,35 +150,34 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
       case 1:
         return (
           <div className="space-y-6">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium flex items-center gap-2">
-                  <User2 size={16} className="text-primary" />
-                  Nombre completo del docente
-                </span>
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                <User2 size={16} className="text-primary" />
+                Nombre completo del docente
               </label>
               <input
                 type="text"
                 name="nombre"
                 placeholder="Ej: Juan Pérez Rodríguez"
-                className={`input input-bordered w-full focus:input-primary transition-all duration-200
-                  ${errors.nombre ? 'input-error' : ''}`}
+                className={`w-full h-10 px-3 rounded-md border bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all ${
+                  errors.nombre 
+                    ? 'border-error text-error placeholder:text-error/50' 
+                    : 'border-base-300'
+                }`}
                 value={formData.nombre}
                 onChange={handleInputChange}
                 disabled={isLoading}
               />
               {errors.nombre && (
-                <label className="label">
-                  <span className="label-text-alt text-error flex items-center gap-1">
-                    <AlertCircle size={14} />
-                    {errors.nombre}
-                  </span>
-                </label>
+                <p className="text-xs text-error flex items-center gap-1 mt-1">
+                  <AlertCircle size={14} />
+                  {errors.nombre}
+                </p>
               )}
             </div>
 
-            <div className="bg-base-200/50 p-4 rounded-lg border border-base-300">
-              <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+              <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-base-content">
                 <Briefcase size={16} className="text-primary" />
                 Información importante
               </h4>
@@ -193,95 +192,101 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Clock size={16} className="text-primary" />
-                    Horas contratadas
-                  </span>
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                  <Clock size={16} className="text-primary" />
+                  Horas contratadas
                 </label>
                 <input
                   type="number"
                   name="horasContratadas"
                   placeholder="Ej: 20"
-                  className={`input input-bordered w-full focus:input-primary transition-all duration-200
-                    ${errors.horasContratadas ? 'input-error' : ''}`}
+                  className={`w-full h-10 px-3 rounded-md border bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all ${
+                    errors.horasContratadas 
+                      ? 'border-error text-error placeholder:text-error/50' 
+                      : 'border-base-300'
+                  }`}
                   value={formData.horasContratadas || ''}
                   onChange={handleInputChange}
                   min="1"
                   max="40"
                   disabled={isLoading}
                 />
-                <label className="label">
-                  <span className="label-text-alt text-base-content/60">Horas semanales totales (1-40)</span>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-base-content/60 mt-1">
+                    Horas semanales totales (1-40)
+                  </p>
                   {errors.horasContratadas && (
-                    <span className="label-text-alt text-error flex items-center gap-1">
+                    <p className="text-xs text-error flex items-center gap-1 mt-1">
                       <AlertCircle size={14} />
                       {errors.horasContratadas}
-                    </span>
+                    </p>
                   )}
-                </label>
+                </div>
               </div>
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium flex items-center gap-2">
-                    <Clock size={16} className="text-primary" />
-                    Horas máximas por día
-                  </span>
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                  <Clock size={16} className="text-primary" />
+                  Horas máximas por día
                 </label>
                 <input
                   type="number"
                   name="horasMaximasPorDia"
                   placeholder="Ej: 4"
-                  className={`input input-bordered w-full focus:input-primary transition-all duration-200
-                    ${errors.horasMaximasPorDia ? 'input-error' : ''}`}
+                  className={`w-full h-10 px-3 rounded-md border bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all ${
+                    errors.horasMaximasPorDia 
+                      ? 'border-error text-error placeholder:text-error/50' 
+                      : 'border-base-300'
+                  }`}
                   value={formData.horasMaximasPorDia || ''}
                   onChange={handleInputChange}
                   min="1"
                   max="8"
                   disabled={isLoading}
                 />
-                <label className="label">
-                  <span className="label-text-alt text-base-content/60">Máximo de horas por día (1-8)</span>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-base-content/60 mt-1">
+                    Máximo de horas por día (1-8)
+                  </p>
                   {errors.horasMaximasPorDia && (
-                    <span className="label-text-alt text-error flex items-center gap-1">
+                    <p className="text-xs text-error flex items-center gap-1 mt-1">
                       <AlertCircle size={14} />
                       {errors.horasMaximasPorDia}
-                    </span>
+                    </p>
                   )}
-                </label>
+                </div>
               </div>
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium flex items-center gap-2">
-                  <Building2 size={16} className="text-primary" />
-                  Unidades Académicas
-                </span>
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                <Building2 size={16} className="text-primary" />
+                Unidades Académicas
               </label>
-              <MultipleSelect
-                isLoading={isLoading}
-                selectedIds={formData.unidadesIds || []}
-                onChange={(ids) => {
-                  setFormData(prev => ({ ...prev, unidadesIds: ids }));
-                  if (errors.unidadesIds) {
-                    setErrors(prev => ({ ...prev, unidadesIds: undefined }));
-                  }
-                }}
-              />
-              <label className="label">
-                <span className="label-text-alt text-base-content/60">
+              <div className={`${errors.unidadesIds ? 'border-error rounded-md border' : ''}`}>
+                <MultipleSelect
+                  isLoading={isLoading}
+                  selectedIds={formData.unidadesIds || []}
+                  onChange={(ids) => {
+                    setFormData(prev => ({ ...prev, unidadesIds: ids }));
+                    if (errors.unidadesIds) {
+                      setErrors(prev => ({ ...prev, unidadesIds: undefined }));
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-base-content/60 mt-1">
                   Seleccione las unidades académicas a las que pertenece el docente
-                </span>
+                </p>
                 {errors.unidadesIds && (
-                  <span className="label-text-alt text-error flex items-center gap-1">
+                  <p className="text-xs text-error flex items-center gap-1 mt-1">
                     <AlertCircle size={14} />
                     {errors.unidadesIds}
-                  </span>
+                  </p>
                 )}
-              </label>
+              </div>
             </div>
           </div>
         );
@@ -293,75 +298,85 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
   return (
     <>
       <button
-        className="btn btn-primary btn-sm flex items-center gap-2 hover:shadow-lg transition-all duration-200"
+        className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-content text-sm font-medium shadow-sm hover:bg-primary-focus transition-colors"
         onClick={openModal}
       >
-        <PlusCircle size={16} />
-        Agregar Docente
+        <PlusCircle size={16} className="opacity-90" />
+        <span>Agregar Docente</span>
       </button>
 
       {isOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-2xl relative">
-            {/* Header */}
-            <div className="flex flex-col gap-2 mb-6">
-              <div className="flex items-center gap-2">
-                <User2 size={24} className="text-primary" />
-                <h3 className="font-bold text-2xl">Registrar Nuevo Docente</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 backdrop-blur-sm">
+          <div className="w-full max-w-2xl bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
+            {/* Modal header */}
+            <div className="px-6 pt-5 pb-4 border-b border-base-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center text-primary border border-primary/20">
+                  <User2 size={20} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-base-content">Registrar Nuevo Docente</h3>
+                  <p className="text-sm mt-1 text-base-content/70">
+                    Complete la información del nuevo docente. Todos los campos son requeridos.
+                  </p>
+                </div>
               </div>
-              <div className="divider mt-0 mb-2"></div>
-              <p className="text-base-content/70">
-                Complete la información del nuevo docente. Todos los campos son requeridos.
-              </p>
-
+              
               {/* Progress Steps */}
-              <div className="w-full flex items-center justify-center gap-4 mt-4">
+              <div className="flex items-center justify-center gap-2 mt-6">
                 {[1, 2].map((step) => (
-                  <button
-                    key={step}
-                    onClick={() => step < currentStep && setCurrentStep(step)}
-                    className={`flex flex-col items-center gap-1 ${
-                      step <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all
-                      ${step === currentStep
-                        ? 'border-primary bg-primary text-white'
-                        : step < currentStep
-                          ? 'border-primary text-primary'
-                          : 'border-base-300 text-base-300'
+                  <div key={step} className="flex items-center">
+                    {step > 1 && (
+                      <div className={`w-10 h-0.5 ${
+                        step <= currentStep ? 'bg-primary' : 'bg-base-300'
+                      }`} />
+                    )}
+                    <button
+                      onClick={() => step < currentStep && setCurrentStep(step)}
+                      className={`flex flex-col items-center ${
+                        step <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'
                       }`}
+                      disabled={step > currentStep || isLoading}
                     >
-                      {step}
-                    </div>
-                    <span className={`text-xs ${
-                      step === currentStep ? 'text-primary font-medium' : 'text-base-content/70'
-                    }`}>
-                      {step === 1 ? 'Datos básicos' : 'Carga horaria'}
-                    </span>
-                  </button>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
+                        step === currentStep
+                          ? 'border-primary bg-primary text-primary-content'
+                          : step < currentStep
+                            ? 'border-primary text-primary bg-primary/10'
+                            : 'border-base-300 text-base-content/50 bg-base-100'
+                        }`}
+                      >
+                        {step}
+                      </div>
+                      <span className={`text-xs mt-1.5 ${
+                        step === currentStep ? 'text-primary font-medium' : 'text-base-content/60'
+                      }`}>
+                        {step === 1 ? 'Datos básicos' : 'Carga horaria'}
+                      </span>
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
-
+            
             {/* Form Content */}
-            <div className="py-4">
+            <div className="px-6 py-5">
               {renderStepContent()}
             </div>
-
-            <div className="divider my-6"></div>
-
+            
             {currentStep === 2 && (
-              <p className="text-sm text-base-content/70 mb-4 flex items-center gap-2">
-                <Clock size={16} className="text-primary" />
-                Las restricciones horarias del docente se podrán configurar posteriormente.
-              </p>
+              <div className="px-6 pt-0 pb-4">
+                <p className="text-sm text-base-content/70 flex items-center gap-2">
+                  <Clock size={16} className="text-primary/70" />
+                  Las restricciones horarias del docente se podrán configurar posteriormente.
+                </p>
+              </div>
             )}
-
-            {/* Actions */}
-            <div className="modal-action gap-3">
-              <button
-                className="btn btn-ghost hover:bg-base-200"
+            
+            {/* Modal footer */}
+            <div className="px-6 py-4 bg-base-200/50 border-t border-base-200 flex justify-end gap-3">
+              <button 
+                className="px-4 py-2 rounded-md text-sm font-medium text-base-content/70 hover:bg-base-300 hover:text-base-content transition-colors" 
                 onClick={closeModal}
                 disabled={isLoading}
               >
@@ -369,8 +384,8 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
               </button>
 
               {currentStep > 1 && (
-                <button
-                  className="btn btn-outline"
+                <button 
+                  className="px-4 py-2 rounded-md text-sm font-medium border border-base-300 hover:bg-base-200 transition-colors" 
                   onClick={handleBack}
                   disabled={isLoading}
                 >
@@ -379,32 +394,37 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
               )}
 
               {currentStep < 2 ? (
-                <button
-                  className="btn btn-primary hover:shadow-lg transition-all duration-200"
+                <button 
+                  className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-content hover:bg-primary-focus transition-colors"
                   onClick={handleNext}
                   disabled={isLoading || !formData.nombre?.trim()}
                 >
                   Siguiente
                 </button>
               ) : (
-                <button
-                  className={`btn btn-primary hover:shadow-lg transition-all duration-200 ${
-                    isLoading ? 'loading' : ''
-                  }`}
+                <button 
+                  className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-content hover:bg-primary-focus transition-colors flex items-center gap-2"
                   onClick={handleSubmit}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Guardando...' : 'Registrar Docente'}
+                  {isLoading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Guardando...</span>
+                    </>
+                  ) : 'Registrar Docente'}
                 </button>
               )}
             </div>
 
-            <button
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            {/* Close button */}
+            <button 
+              className="absolute right-4 top-4 w-8 h-8 rounded-full flex items-center justify-center text-base-content/60 hover:bg-base-200 hover:text-base-content transition-colors"
               onClick={closeModal}
               disabled={isLoading}
+              aria-label="Cerrar"
             >
-              ✕
+              <X size={18} />
             </button>
           </div>
         </div>

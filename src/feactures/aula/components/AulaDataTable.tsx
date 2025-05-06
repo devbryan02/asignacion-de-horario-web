@@ -72,7 +72,7 @@ export default function AulaDataTable() {
           <AulaTableContent 
             isLoading={isLoading} 
             aulas={currentItems} 
-            onEdit={(aula) => console.log('Edit aula', aula)}
+            onAulaUpdated={(aula) => console.log('Edit aula', aula)}
             onDelete={(id) => console.log('Delete aula', id)}
           />
         </div>

@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, corporate;
+  themes: light --default, dark --prefersdark, corporate, forest, retro,dim, business, fantasy, cyberpunk, synthwave, dracula, black, luxury, night, winter;
 }
 
 

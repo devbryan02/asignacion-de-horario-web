@@ -102,7 +102,7 @@ export default function AulaTableContent({
                 <th className="py-3 px-4 text-sm font-semibold text-base-content/80 text-left">Nombre</th>
                 <th className="py-3 px-4 text-sm font-semibold text-base-content/80 text-left">Capacidad</th>
                 <th className="py-3 px-4 text-sm font-semibold text-base-content/80 text-left">Tipo</th>
-                <th className="py-3 px-4 text-sm font-semibold text-base-content/80 text-right">Acciones</th>
+                <th className="py-3 px-4 text-sm font-semibold text-base-content/80 text-left">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-base-200">
@@ -139,7 +139,7 @@ export default function AulaTableContent({
                       </div>
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-start gap-2">
                         <button
                           className="p-1.5 rounded-md bg-info/10 text-info hover:bg-info/20 transition-colors"
                           onClick={() => handleEditClick(aula)}

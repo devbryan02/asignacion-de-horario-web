@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusCircle, User2, Clock, Briefcase, Building2, AlertCircle, X, Loader2 } from "lucide-react";
-import { Docente } from "@/types/response/DocenteResponse";
-import { createDocente } from "../DocenteService";
+import { DocenteResponse } from "@/types/response/DocenteResponse";
+import { createDocente, updateDocente, DocenteUpdateRequest } from "../DocenteService";
 import toast from "react-hot-toast";
 import { DocenteRequest } from "@/types/request/DocenteRequest";
 import MultipleSelect from "./MultipleSelect";
 
 interface AgregarDocenteModalProps {
   onDocenteCreated?: () => void;
+  docenteToEdit?: DocenteResponse | null;
+  isEditMode?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 interface ValidationErrors {
@@ -19,8 +23,14 @@ interface ValidationErrors {
   unidadesIds?: string;
 }
 
-function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
-  const [isOpen, setIsOpen] = useState(false);
+function AgregarDocenteModal({ 
+  onDocenteCreated, 
+  docenteToEdit = null, 
+  isEditMode = false,
+  isOpen: externalIsOpen = false,
+  onClose
+}: AgregarDocenteModalProps) {
+  const [isOpen, setIsOpen] = useState(externalIsOpen);
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -30,6 +40,25 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
     horasMaximasPorDia: 0,
     unidadesIds: []
   });
+
+  // Actualizar estado cuando cambia docenteToEdit o isOpen externo
+  useEffect(() => {
+    if (docenteToEdit) {
+      setFormData({
+        nombre: docenteToEdit.nombre,
+        horasContratadas: docenteToEdit.horasContratadas,
+        horasMaximasPorDia: docenteToEdit.horasMaximasPorDia
+        // No incluimos unidadesIds para edición ya que usaremos actualización parcial
+      });
+    }
+  }, [docenteToEdit]);
+  
+  useEffect(() => {
+    setIsOpen(externalIsOpen);
+    if (externalIsOpen) {
+      setCurrentStep(1);
+    }
+  }, [externalIsOpen]);
 
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
@@ -56,7 +85,8 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
       isValid = false;
     }
 
-    if (!formData.unidadesIds?.length) {
+    // Solo validamos unidadesIds para creación, no para edición
+    if (!isEditMode && !formData.unidadesIds?.length) {
       newErrors.unidadesIds = "Debe seleccionar al menos una unidad académica";
       isValid = false;
     }
@@ -89,18 +119,25 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
   };
 
   const closeModal = () => {
-    setIsOpen(false);
+    if (onClose) {
+      onClose();
+    } else {
+      setIsOpen(false);
+    }
     setCurrentStep(1);
     setErrors({});
     if (typeof document !== "undefined") {
       document.body.style.overflow = "";
     }
-    setFormData({
-      nombre: "",
-      horasContratadas: 0,
-      horasMaximasPorDia: 0,
-      unidadesIds: []
-    });
+    // Solo resetear formulario si no estamos en modo edición
+    if (!isEditMode) {
+      setFormData({
+        nombre: "",
+        horasContratadas: 0,
+        horasMaximasPorDia: 0,
+        unidadesIds: []
+      });
+    }
   };
 
   const handleNext = () => {
@@ -122,15 +159,33 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
 
     try {
       setIsLoading(true);
-      const toastId = toast.loading("Registrando docente...");
+      const action = isEditMode ? "Actualizando" : "Registrando";
+      const toastId = toast.loading(`${action} docente...`);
 
-      await createDocente(formData as Docente);
-
-      toast.success("¡Docente registrado exitosamente!", {
-        id: toastId,
-        duration: 4000,
-        icon: "👨‍🏫",
-      });
+      if (isEditMode && docenteToEdit) {
+        // Para edición, usamos la actualización parcial
+        const updateData: DocenteUpdateRequest = {
+          nombre: formData.nombre,
+          horasContratadas: formData.horasContratadas,
+          horasMaximasPorDia: formData.horasMaximasPorDia
+        };
+        
+        await updateDocente(docenteToEdit.id, updateData);
+        
+        toast.success("¡Docente actualizado exitosamente!", {
+          id: toastId,
+          duration: 4000,
+          icon: "👨‍🏫",
+        });
+      } else {
+        // Para creación, enviamos el objeto completo
+        await createDocente(formData as DocenteRequest);
+        toast.success("¡Docente registrado exitosamente!", {
+          id: toastId,
+          duration: 4000,
+          icon: "👨‍🏫",
+        });
+      }
 
       if (onDocenteCreated) {
         onDocenteCreated();
@@ -138,8 +193,8 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
 
       closeModal();
     } catch (error) {
-      console.error("Error al crear el docente:", error);
-      toast.error("Error al crear el docente: " + (error instanceof Error ? error.message : "Error desconocido"));
+      console.error(`Error al ${isEditMode ? "actualizar" : "crear"} el docente:`, error);
+      toast.error(`Error al ${isEditMode ? "actualizar" : "crear"} el docente: ${error instanceof Error ? error.message : "Error desconocido"}`);
     } finally {
       setIsLoading(false);
     }
@@ -259,35 +314,48 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                <Building2 size={16} className="text-primary" />
-                Unidades Académicas
-              </label>
-              <div className={`${errors.unidadesIds ? 'border-error rounded-md border' : ''}`}>
-                <MultipleSelect
-                  isLoading={isLoading}
-                  selectedIds={formData.unidadesIds || []}
-                  onChange={(ids) => {
-                    setFormData(prev => ({ ...prev, unidadesIds: ids }));
-                    if (errors.unidadesIds) {
-                      setErrors(prev => ({ ...prev, unidadesIds: undefined }));
-                    }
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-base-content/60 mt-1">
-                  Seleccione las unidades académicas a las que pertenece el docente
-                </p>
-                {errors.unidadesIds && (
-                  <p className="text-xs text-error flex items-center gap-1 mt-1">
-                    <AlertCircle size={14} />
-                    {errors.unidadesIds}
+            {/* Sólo mostrar el selector de unidades para creación, no para edición */}
+            {!isEditMode && (
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-base-content flex items-center gap-2">
+                  <Building2 size={16} className="text-primary" />
+                  Unidades Académicas
+                </label>
+                <div className={`${errors.unidadesIds ? 'border-error rounded-md border' : ''}`}>
+                  <MultipleSelect
+                    isLoading={isLoading}
+                    selectedIds={formData.unidadesIds || []}
+                    onChange={(ids) => {
+                      setFormData(prev => ({ ...prev, unidadesIds: ids }));
+                      if (errors.unidadesIds) {
+                        setErrors(prev => ({ ...prev, unidadesIds: undefined }));
+                      }
+                    }}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-base-content/60 mt-1">
+                    Seleccione las unidades académicas a las que pertenece el docente
                   </p>
-                )}
+                  {errors.unidadesIds && (
+                    <p className="text-xs text-error flex items-center gap-1 mt-1">
+                      <AlertCircle size={14} />
+                      {errors.unidadesIds}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Mensaje informativo para modo edición */}
+            {isEditMode && (
+              <div className="bg-info/10 p-4 rounded-lg border border-info/20">
+                <p className="text-sm text-base-content flex items-center gap-2">
+                  <Building2 size={16} className="text-info" />
+                  No es posible actualizar las unidades académicas asignadas al docente porque ya tiene restricciones y asignaciones horarias generadas. 
+                </p>
+              </div>
+            )}
           </div>
         );
       default:
@@ -295,15 +363,23 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
     }
   };
 
+  // Si el control es externo, solo renderizar cuando isOpen es true
+  if (onClose && !isOpen) {
+    return null;
+  }
+
   return (
     <>
-      <button
-        className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-content text-sm font-medium shadow-sm hover:bg-primary-focus transition-colors"
-        onClick={openModal}
-      >
-        <PlusCircle size={16} className="opacity-90" />
-        <span>Agregar Docente</span>
-      </button>
+      {/* Solo mostrar el botón si no es controlado externamente */}
+      {!onClose && (
+        <button
+          className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-content text-sm font-medium shadow-sm hover:bg-primary-focus transition-colors"
+          onClick={openModal}
+        >
+          <PlusCircle size={16} className="opacity-90" />
+          <span>Agregar Docente</span>
+        </button>
+      )}
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 backdrop-blur-sm">
@@ -315,9 +391,14 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
                   <User2 size={20} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-base-content">Registrar Nuevo Docente</h3>
+                  <h3 className="text-xl font-bold text-base-content">
+                    {isEditMode ? "Editar Docente" : "Registrar Nuevo Docente"}
+                  </h3>
                   <p className="text-sm mt-1 text-base-content/70">
-                    Complete la información del nuevo docente. Todos los campos son requeridos.
+                    {isEditMode 
+                      ? "Actualice la información básica del docente."
+                      : "Complete la información del nuevo docente. Todos los campos son requeridos."
+                    }
                   </p>
                 </div>
               </div>
@@ -412,7 +493,7 @@ function AgregarDocenteModal({ onDocenteCreated }: AgregarDocenteModalProps) {
                       <Loader2 size={16} className="animate-spin" />
                       <span>Guardando...</span>
                     </>
-                  ) : 'Registrar Docente'}
+                  ) : isEditMode ? 'Actualizar Docente' : 'Registrar Docente'}
                 </button>
               )}
             </div>

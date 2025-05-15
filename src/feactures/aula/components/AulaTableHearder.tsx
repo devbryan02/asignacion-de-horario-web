@@ -7,7 +7,7 @@ interface AulaTableHeaderProps {
 
 export default function AulaTableHeader({ onAulaCreated }: AulaTableHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 ">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary border border-primary/20">
           <School size={20} />

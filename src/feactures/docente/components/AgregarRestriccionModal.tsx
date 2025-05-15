@@ -8,6 +8,7 @@ import { DiaSemana } from "@/types/DiaSemana";
 import { TipoRestriccion } from "@/types/TipoRestriccion";
 import toast from "react-hot-toast";
 import { UUID } from "crypto";
+import { useRouter } from 'next/navigation';
 
 interface AgregarRestriccionModalProps {
     docenteId: UUID;
@@ -26,7 +27,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         horaFin: "10:00:00",
         tipoRestriccion: "DISPONIBLE"
     });
-
+    
     const diasSemana: DiaSemana[] = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
     const tiposRestriccion: TipoRestriccion[] = ["DISPONIBLE", "BLOQUEADO"];
     // Modificar la generación de horas disponibles para incluir hasta las 22:00
@@ -96,7 +97,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
             };
 
             const response = await createRestriccionDocente(restriccionCompleta);
-
+    
             if (!response.success) {
                 toast.dismiss(toastId);
                 setErrorMensaje(response.message);

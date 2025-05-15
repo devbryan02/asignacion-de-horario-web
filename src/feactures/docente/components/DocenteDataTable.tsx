@@ -6,6 +6,7 @@ import DocenteSearchBar from './DocenteSearchBar';
 import DocenteFilters from './DocenteFilters';
 import DocenteTableContent from './DocenteTableContent';
 import DocentePagination from './DocentePagination';
+import AgregarDocenteModal from './AgregarDocenteModal';
 
 export default function DocenteDataTable() {
   const {
@@ -23,10 +24,17 @@ export default function DocenteDataTable() {
     handleSearchChange,
     clearFilters,
     paginate,
+    // Para edición
+    docenteToEdit,
+    isEditModalOpen,
+    handleEditDocente,
+    setIsEditModalOpen,
+    // Para eliminación
+    handleDeleteDocente
   } = useDocentes();
 
   return (
-    <div className="overflow-hidden rounded p-4 bg-base-100 border border-gray-300">
+    <div className="overflow-hidden rounded-lg p-4 bg-base-100 border border-base-300 shadow-sm">
       <DocenteTableHeader onDocenteCreated={loadDocentes} />
 
       <div className="flex flex-col gap-4 mb-6">
@@ -49,15 +57,30 @@ export default function DocenteDataTable() {
       <DocenteTableContent 
         isLoading={isLoading} 
         docentes={currentItems}
+        onEdit={handleEditDocente}
+        onDelete={handleDeleteDocente}
         onRestriccionCreated={loadDocentes}
       />
 
-      <DocentePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={paginate}
-        totalItems={filteredDocentes.length}
-      />
+      <div className="mt-4">
+        <DocentePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={paginate}
+          totalItems={filteredDocentes.length}
+        />
+      </div>
+      
+      {/* Modal para edición */}
+      {isEditModalOpen && docenteToEdit && (
+        <AgregarDocenteModal 
+          docenteToEdit={docenteToEdit}
+          isEditMode={true}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onDocenteCreated={loadDocentes}
+        />
+      )}
     </div>
   );
 }

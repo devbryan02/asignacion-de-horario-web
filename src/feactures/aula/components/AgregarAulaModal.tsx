@@ -21,7 +21,7 @@ function AgregarAulaModal({ onAulaCreated }: AgregarAulaModalProps) {
   return (
     <>
       <button
-        className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-content text-sm font-medium shadow-sm hover:bg-primary-focus transition-colors"
+        className="inline-flex cursor-pointer items-center justify-center gap-2 px-3 py-2 rounded-md bg-primary text-primary-content text-sm font-medium shadow-sm hover:bg-primary-focus transition-colors"
         onClick={openModal}
       >
         <PlusCircle size={16} className="opacity-90" />

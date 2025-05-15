@@ -1,13 +1,14 @@
-import { Docente } from '@/types/response/DocenteResponse';
+import { DocenteResponse } from '@/types/response/DocenteResponse';
 import { Clock, Pencil, Trash2, Calendar, Loader2, AlertCircle } from 'lucide-react';
 import AgregarRestriccionModal from './AgregarRestriccionModal';
+import { UUID } from 'crypto';
 
 interface DocenteTableContentProps {
   isLoading: boolean;
-  docentes: Docente[];
-  onEdit?: (docente: Docente) => void;
-  onDelete?: (id: string) => void;
-  onRestriccionCreated?: () => void;
+  docentes: DocenteResponse[];
+  onEdit: (docente: DocenteResponse) => void;
+  onRestriccionCreated: () => void;
+  onDelete: (id: UUID, nombre: string) => void;
 }
 
 export default function DocenteTableContent({ 
@@ -22,7 +23,7 @@ export default function DocenteTableContent({
       <div className="overflow-x-auto">
         <div className="max-h-[450px] overflow-y-auto">
           <table className="w-full border-collapse text-sm">
-            <thead>
+            <thead className="sticky top-0 z-10">
               <tr className="bg-base-200/70 border-b border-base-300">
                 <th className="text-left py-3 px-4 font-medium text-base-content/80">Nombre</th>
                 <th className="text-left py-3 px-4 font-medium text-base-content/80">Horas Contratadas</th>
@@ -47,7 +48,9 @@ export default function DocenteTableContent({
                     key={docente.id} 
                     className="border-b border-base-200 hover:bg-base-100/80 transition-colors"
                   >
-                    <td className="py-3 px-4 text-base-content font-medium">{docente.nombre}</td>
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-base-content">{docente.nombre}</div>
+                    </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2 text-base-content">
                         <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
@@ -83,12 +86,12 @@ export default function DocenteTableContent({
                         <button 
                           className="p-1.5 rounded-md bg-error/10 text-error hover:bg-error/20 transition-colors"
                           title="Eliminar docente"
-                          onClick={() => onDelete && onDelete(docente.id)}
+                          onClick={() => onDelete && onDelete(docente.id, docente.nombre)}
                         >
                           <Trash2 size={15} />
                         </button>
                         
-                        {/* Reemplazamos el botón normal con el componente AgregarRestriccionModal */}
+                        {/* Componente AgregarRestriccionModal */}
                         <div className="w-8 h-8 flex items-center justify-center">
                           <AgregarRestriccionModal
                             docenteId={docente.id}

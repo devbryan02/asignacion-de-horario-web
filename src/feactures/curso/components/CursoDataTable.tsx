@@ -26,7 +26,7 @@ export default function CursoDataTable() {
   } = useCursos();
 
   return (
-    <div className="overflow-hidden rounded p-4 bg-base-100 border border-gray-300">
+    <div className="overflow-hidden rounded-lg p-4 bg-base-100 border border-base-300 shadow-sm">
       <CursoTableHeader onCursoCreated={loadCursos} />
 
       <div className="flex flex-col gap-4 mb-6">
@@ -46,13 +46,18 @@ export default function CursoDataTable() {
         />
       </div>
 
-      <CursoTableContent isLoading={isLoading} cursos={currentItems} />
-
-      <CursoPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={paginate}
+      <CursoTableContent 
+        isLoading={isLoading} 
+        cursos={currentItems}
       />
+
+      <div className="mt-4">
+        <CursoPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={paginate}
+        />
+      </div>
     </div>
   );
 }

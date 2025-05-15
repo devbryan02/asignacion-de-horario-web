@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PlusCircle, Book, Loader2, AlertCircle, X } from "lucide-react";
+import { PlusCircle, Book, Loader2, X, Check, ChevronsUpDown } from "lucide-react";
 import { createCurso } from "../CursoService";
 import { CursoRequest } from "@/types/request/CursoRequest";
 import { UnidadAcademica } from "@/types/UnidadAcademica";
@@ -154,153 +154,246 @@ function AgregarCursoModal({ unidadId, unidadNombre, onCursoCreated }: AgregarCu
     }
   };
 
+  const getTipoColor = (tipo: string) => {
+    switch (tipo) {
+      case "TEORICO":
+        return "badge badge-primary";
+      case "LABORATORIO":
+        return "badge badge-secondary";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300";
+    }
+  };
+
   return (
     <>
       <button
-        className="btn btn-primary btn-sm flex items-center gap-2 hover:shadow-lg transition-all duration-200"
+        className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary-focus text-white rounded-lg text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md active:scale-95"
         onClick={openModal}
       >
-        <PlusCircle size={16} />
-        Agregar Curso
+        <PlusCircle size={16} className="stroke-[2.5]" />
+        <span>Agregar Curso</span>
       </button>
 
       {isOpen && (
-        <div
-          className="modal modal-open flex justify-center items-center"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="modal-box max-w-2xl relative">
-            <button
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={closeModal}
-              aria-label="Cerrar"
+        <>
+          {/* Backdrop overlay with animation */}
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
+            onClick={closeModal}
+          />
+
+          {/* Modal container */}
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div 
+              className="bg-base-100 rounded-2xl shadow-xl max-w-xl w-full overflow-hidden animate-scale-in"
+              onClick={e => e.stopPropagation()}
             >
-              <X size={16} />
-            </button>
-            <h3 className="font-bold text-2xl text-primary flex items-center gap-2">
-              <Book className="text-primary" size={24} />
-              Agregar Nuevo Curso
-            </h3>
-            <p className="text-base-content/70">
-              {unidadId
-                ? `Agregando curso para ${unidadNombre}.`
-                : "Complete la información del nuevo curso."}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-              {/* Nombre */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Nombre del curso</span>
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  placeholder="Ej: Programación Web"
-                  className={`input input-bordered ${errors.nombre ? "input-error" : ""}`}
-                  value={formData.nombre}
-                  onChange={handleInputChange}
-                  disabled={isLoading}
-                />
-                {errors.nombre && (
-                  <span className="text-error text-sm mt-1">{errors.nombre}</span>
-                )}
-              </div>
-
-              {/* Horas semanales */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Horas semanales</span>
-                </label>
-                <input
-                  type="number"
-                  name="horasSemanales"
-                  placeholder="Ej: 6"
-                  className={`input input-bordered ${errors.horasSemanales ? "input-error" : ""}`}
-                  value={formData.horasSemanales}
-                  onChange={handleInputChange}
-                  min="1"
-                  max="40"
-                  disabled={isLoading}
-                />
-                {errors.horasSemanales && (
-                  <span className="text-error text-sm mt-1">{errors.horasSemanales}</span>
-                )}
-              </div>
-
-              {/* Tipo */}
-              <div className="form-control">
-                <label className="label">
-                  <span>Curso se enseña en un aula</span>
-                </label>
-                <select
-                  name="tipo"
-                  className={`select select-bordered ${errors.tipo ? "select-error" : ""}`}
-                  value={formData.tipo}
-                  onChange={handleInputChange}
-                  disabled={isLoading}
-                >
-                  <option value="" disabled>
-                    Seleccione tipo
-                  </option>
-                  <option value="TEORICO">Teórico</option>
-                  <option value="LABORATORIO">Laboratorio</option>
-                </select>
-                {errors.tipo && (
-                  <span className="text-error text-sm mt-1">{errors.tipo}</span>
-                )}
-              </div>
-
-              {/* Unidad académica */}
-              {!unidadId && (
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Unidad Académica</span>
-                  </label>
-                  {isLoadingUnidades ? (
-                    <div className="flex items-center gap-2">
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>Cargando...</span>
+              {/* Header */}
+              <div className="p-5 border-b border-base-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary">
+                      <Book size={20} />
                     </div>
-                  ) : (
-                    <select
-                      name="unidadId"
-                      className={`select select-bordered ${errors.unidadId ? "select-error" : ""}`}
-                      value={selectedUnidadId || ""}
+                    <div>
+                      <h3 className="font-semibold text-lg">Agregar Nuevo Curso</h3>
+                      <p className="text-sm text-base-content/60">
+                        {unidadId
+                          ? `Agregando curso para ${unidadNombre}`
+                          : "Complete la información del nuevo curso"}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    className="w-8 h-8 rounded-lg hover:bg-base-200 flex items-center justify-center text-base-content/70"
+                    onClick={closeModal}
+                    aria-label="Cerrar"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Form body */}
+              <div className="p-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Nombre del curso */}
+                  <div className="form-control col-span-full">
+                    <label className="label">
+                      <span className="label-text font-medium">Nombre del curso</span>
+                      <span className="text-error text-sm">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      placeholder="Ej: Programación Web"
+                      className={`input input-bordered w-full bg-base-100 ${
+                        errors.nombre ? "input-error" : "focus:border-primary"
+                      }`}
+                      value={formData.nombre}
                       onChange={handleInputChange}
-                      disabled={isLoading || unidadesAcademicas.length === 0}
-                    >
-                      <option value="" disabled>
-                        Seleccione unidad
-                      </option>
-                      {unidadesAcademicas.map((unidad) => (
-                        <option key={unidad.id} value={unidad.id}>
-                          {unidad.nombre}
+                      disabled={isLoading}
+                    />
+                    {errors.nombre && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <X size={12} className="inline" />
+                          {errors.nombre}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Tipo de curso */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">Tipo de curso</span>
+                      <span className="text-error text-sm">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        name="tipo"
+                        className={`select select-bordered w-full pr-10 ${
+                          errors.tipo ? "select-error" : "focus:border-primary"
+                        }`}
+                        value={formData.tipo}
+                        onChange={handleInputChange}
+                        disabled={isLoading}
+                      >
+                        <option value="" disabled>
+                          Seleccione tipo
                         </option>
-                      ))}
-                    </select>
-                  )}
-                  {errors.unidadId && (
-                    <span className="text-error text-sm mt-1">{errors.unidadId}</span>
+                        <option value="TEORICO">Teórico</option>
+                        <option value="LABORATORIO">Laboratorio</option>
+                      </select>
+                    </div>
+                    {errors.tipo && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <X size={12} className="inline" />
+                          {errors.tipo}
+                        </span>
+                      </label>
+                    )}
+                    
+                    {formData.tipo && (
+                      <div className="mt-2">
+                        <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getTipoColor(formData.tipo)}`}>
+                          {formData.tipo === "TEORICO" ? "Teórico" : "Laboratorio"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Horas semanales */}
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">Horas semanales</span>
+                      <span className="text-error text-sm">*</span>
+                    </label>
+                    <div className="flex">
+                      <input
+                        type="number"
+                        name="horasSemanales"
+                        placeholder="2"
+                        className={`input input-bordered w-full ${
+                          errors.horasSemanales ? "input-error" : "focus:border-primary"
+                        }`}
+                        value={formData.horasSemanales}
+                        onChange={handleInputChange}
+                        min="1"
+                        max="40"
+                        disabled={isLoading}
+                      />
+                    </div>
+                    {errors.horasSemanales && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <X size={12} className="inline" />
+                          {errors.horasSemanales}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Unidad académica */}
+                  {!unidadId && (
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-medium">Unidad Académica</span>
+                        <span className="text-error text-sm">*</span>
+                      </label>
+                      {isLoadingUnidades ? (
+                        <div className="flex items-center gap-2 h-12 px-4 border border-base-300 rounded-lg text-base-content/60">
+                          <Loader2 size={16} className="animate-spin" />
+                          <span>Cargando unidades...</span>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <select
+                            name="unidadId"
+                            className={`select select-bordered w-full pr-10 ${
+                              errors.unidadId ? "select-error" : "focus:border-primary"
+                            }`}
+                            value={selectedUnidadId || ""}
+                            onChange={handleInputChange}
+                            disabled={isLoading || unidadesAcademicas.length === 0}
+                          >
+                            <option value="" disabled>
+                              Seleccione unidad
+                            </option>
+                            {unidadesAcademicas.map((unidad) => (
+                              <option key={unidad.id} value={unidad.id}>
+                                {unidad.nombre}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                      {errors.unidadId && (
+                        <label className="label">
+                          <span className="label-text-alt text-error flex items-center gap-1">
+                            <X size={12} className="inline" />
+                            {errors.unidadId}
+                          </span>
+                        </label>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
 
-            <div className="modal-action">
-              <button className="btn btn-ghost" onClick={closeModal}>
-                Cancelar
-              </button>
-              <button
-                className={`btn btn-primary ${isLoading ? "loading" : ""}`}
-                onClick={handleSubmit}
-              >
-                Guardar
-              </button>
+              {/* Footer actions */}
+              <div className="flex justify-end gap-3 px-5 py-4 bg-base-200/50 border-t border-base-200">
+                <button
+                  className="px-4 py-2 rounded-lg border border-base-300 hover:bg-base-300 text-base-content/80 font-medium transition-colors"
+                  onClick={closeModal}
+                  disabled={isLoading}
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="px-4 py-2 bg-primary hover:bg-primary-focus text-white rounded-lg font-medium shadow-sm flex items-center gap-2 transition-all hover:shadow disabled:opacity-70 disabled:hover:shadow-none disabled:cursor-not-allowed"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span>Guardando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check size={18} className="stroke-[2.5]" />
+                      <span>Guardar curso</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

@@ -1,7 +1,7 @@
-function SeccionPage() {
-    return ( 
-        <p>Secciones</p>
-     );
-}
+import SeccionDataTable from '@/feactures/seccion-academica/components/SeccionDataTable';
 
-export default SeccionPage;
+export default function SeccionesPage() {
+  return (
+    <SeccionDataTable />
+  );
+}

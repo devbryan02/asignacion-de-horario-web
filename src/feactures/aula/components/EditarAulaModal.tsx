@@ -45,7 +45,7 @@ function EditarAulaModal({ aula, isOpen: isModalOpen, onClose, onAulaUpdated }: 
   if (!isModalOpen) return null; // Cambio aquí: usar isModalOpen en lugar de isOpen
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/45 backdrop-blur-sm">
       <div className="w-full max-w-2xl bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
         {/* Modal header */}
         <div className="px-6 pt-5 pb-4 border-b border-base-200">

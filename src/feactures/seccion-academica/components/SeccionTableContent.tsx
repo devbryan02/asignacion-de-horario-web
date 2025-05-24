@@ -9,8 +9,8 @@ interface SeccionTableContentProps {
   onDelete: (id: UUID, nombre: string) => void;
 }
 
-export default function SeccionTableContent({ 
-  isLoading, 
+export default function SeccionTableContent({
+  isLoading,
   secciones,
   onEdit,
   onDelete
@@ -24,10 +24,10 @@ export default function SeccionTableContent({
               <tr>
                 <th className="py-3 px-4 text-left font-medium text-base-content/80">Nombre</th>
                 <th className="py-3 px-4 text-left font-medium text-base-content/80">Periodo Académico</th>
-                <th className="py-3 px-4 text-right font-medium text-base-content/80">Acciones</th>
+                <th className="py-3 px-4 text-center font-medium text-base-content/80">Acciones</th>
               </tr>
             </thead>
-            
+
             <tbody>
               {isLoading ? (
                 <tr>
@@ -40,8 +40,8 @@ export default function SeccionTableContent({
                 </tr>
               ) : secciones && secciones.length > 0 ? (
                 secciones.map((seccion) => (
-                  <tr 
-                    key={seccion.id} 
+                  <tr
+                    key={seccion.id}
                     className="border-b border-base-200 hover:bg-base-100/80 transition-colors"
                   >
                     <td className="py-2 px-4">
@@ -53,21 +53,23 @@ export default function SeccionTableContent({
                       </div>
                     </td>
                     <td className="py-2 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button 
-                          className="w-8 h-8 flex items-center justify-center text-base-content/70 hover:bg-primary/10 hover:text-primary rounded-full transition-colors"
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          className="p-1.5  inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                           onClick={() => onEdit(seccion)}
                           title="Editar sección"
                         >
                           <Edit size={16} />
+                          Editar
                         </button>
-                        
-                        <button 
-                          className="w-8 h-8 flex items-center justify-center text-base-content/70 hover:bg-error/10 hover:text-error rounded-full transition-colors"
+
+                        <button
+                          className="p-1.5 inline-flex items-center gap-1 rounded-md bg-error/10 text-error hover:bg-error/20 transition-colors"
                           onClick={() => onDelete(seccion.id, seccion.nombre)}
                           title="Eliminar sección"
                         >
                           <Trash2 size={16} />
+                          Eliminar
                         </button>
                       </div>
                     </td>

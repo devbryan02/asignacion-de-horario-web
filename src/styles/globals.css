@@ -3,7 +3,7 @@
 @plugin "daisyui";
 
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, corporate, forest, retro,dim, business, fantasy, cyberpunk, synthwave, dracula, black, luxury, night, winter;
+  themes: all;
 }
 
 
@@ -43,3 +43,26 @@
    --toast-loading-icon: #3b82f6;
  }
 
+
+ @keyframes ping-once {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  70%, 100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+.animate-ping-once {
+  animation: ping-once 0.5s cubic-bezier(0, 0, 0.2, 1);
+}
+
+ @keyframes progress {
+   0% { transform: translateX(-100%); }
+   50% { transform: translateX(100%); }
+   100% { transform: translateX(300%); }
+ }
+ .animate-progress {
+   animation: progress 2s ease-in-out infinite;
+ }

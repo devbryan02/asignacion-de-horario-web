@@ -5,7 +5,7 @@ const DashboardPage = () => {
   return (
     <>
       <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-      <p className="text-md text-neutral mb-6">
+      <p className="text-md text-base-content mb-6">
         Bienvenido al Sistema de Gestión de Horarios de la 
         <span className="badge badge-info badge-sm mx-1">Pontificia</span>
         Aquí podrás gestionar y visualizar toda la información relacionada con los horarios académicos, aulas, docentes y más.

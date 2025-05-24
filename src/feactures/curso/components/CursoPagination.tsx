@@ -1,114 +1,152 @@
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface CursoPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  itemsPerPage?: number;
 }
 
-export default function CursoPagination({ 
-  currentPage, 
+export default function CursoPagination({
+  currentPage,
   totalPages,
-  onPageChange 
+  onPageChange,
+  itemsPerPage = 5
 }: CursoPaginationProps) {
+  // Si solo hay una página, no mostramos paginación
   if (totalPages <= 1) return null;
   
-  // Función para generar el rango de páginas a mostrar
-  const getPageRange = (): (number | 'ellipsis')[] => {
-    const maxButtons = 5; // Número máximo de botones numéricos
+  // Función para obtener rango de páginas con mejor visualización
+  const getPageRange = () => {
+    // Mostrar máximo 5 números de página
+    let startPage: number;
+    let endPage: number;
     
-    if (totalPages <= maxButtons) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (totalPages <= 5) {
+      // Menos de 5 páginas, mostrar todas
+      startPage = 1;
+      endPage = totalPages;
+    } else {
+      // Más de 5 páginas, calcular rango centrado
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = 5;
+      } else if (currentPage + 2 >= totalPages) {
+        startPage = totalPages - 4;
+        endPage = totalPages;
+      } else {
+        startPage = currentPage - 2;
+        endPage = currentPage + 2;
+      }
     }
     
-    // Siempre mostrar primera y última página
-    const pages: (number | 'ellipsis')[] = [1];
+    // Crear array con los números de página
+    const pages: (number | string)[] = [];
     
-    // Cálculo del rango central
-    let startPage = Math.max(2, currentPage - 1);
-    let endPage = Math.min(totalPages - 1, currentPage + 1);
-    
-    // Ajustes para mantener el tamaño del rango
-    if (currentPage <= 3) {
-      endPage = Math.min(4, totalPages - 1);
-    } else if (currentPage >= totalPages - 2) {
-      startPage = Math.max(totalPages - 3, 2);
+    // Agregar "primera página" si no estamos al inicio
+    if (startPage > 1) {
+      pages.push(1);
+      if (startPage > 2) {
+        pages.push("...");
+      }
     }
     
-    // Añadir ellipsis inicial si es necesario
-    if (startPage > 2) {
-      pages.push('ellipsis');
-    }
-    
-    // Añadir el rango central
+    // Agregar páginas centrales
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
     
-    // Añadir ellipsis final si es necesario
-    if (endPage < totalPages - 1) {
-      pages.push('ellipsis');
-    }
-    
-    // Añadir la última página si hay más de una página
-    if (totalPages > 1) {
+    // Agregar "última página" si no estamos al final
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push("...");
+      }
       pages.push(totalPages);
     }
     
     return pages;
   };
-
-  const pageRange = getPageRange();
   
-  return (
-    <div className="flex justify-center items-center gap-1 mt-6">
-      {/* Botón anterior */}
-      <button
-        className="w-9 h-9 flex items-center justify-center rounded-md border border-base-300 bg-base-100 text-base-content/80 transition-colors hover:bg-base-200 disabled:opacity-50 disabled:hover:bg-base-100"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        aria-label="Página anterior"
-      >
-        <ChevronLeft size={18} />
-      </button>
+  const pageRange = getPageRange();
 
-      {/* Botones de página */}
-      <div className="flex items-center gap-1">
-        {pageRange.map((page, index) => 
-          page === 'ellipsis' ? (
-            <div 
-              key={`ellipsis-${index}`} 
-              className="w-9 h-9 flex items-center justify-center text-base-content/60"
-            >
-              <MoreHorizontal size={16} />
-            </div>
-          ) : (
+  return (
+    <div className="flex items-center justify-center gap-2 my-4">
+      {/* Botones de navegación */}
+      <div className="join shadow-sm">
+        {/* Botón Primera página */}
+        <button
+          className="join-item btn btn-sm btn-outline"
+          onClick={() => onPageChange(1)}
+          disabled={currentPage === 1}
+          title="Primera página"
+        >
+          <ChevronsLeft size={16} />
+        </button>
+        
+        {/* Botón Anterior */}
+        <button
+          className="join-item btn btn-sm btn-outline"
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          title="Página anterior"
+        >
+          <ChevronLeft size={16} />
+        </button>
+      </div>
+      
+      {/* Números de página */}
+      <div className="join shadow-sm">
+        {pageRange.map((page, index) => (
+          typeof page === "number" ? (
             <button
-              key={`page-${page}`}
-              className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                currentPage === page 
-                  ? 'bg-primary text-white hover:bg-primary/90 shadow-sm' 
-                  : 'border border-base-300 bg-base-100 text-base-content/80 hover:bg-base-200'
+              key={`page-${index}-${page}`}
+              className={`join-item btn btn-sm ${
+                page === currentPage ? "btn-primary" : "btn-outline"
               }`}
               onClick={() => onPageChange(page)}
-              aria-current={currentPage === page ? 'page' : undefined}
-              aria-label={`Ir a página ${page}`}
+            >
+              {page}
+            </button>
+          ) : (
+            <button 
+              key={`ellipsis-${index}`} 
+              className="join-item btn btn-sm btn-disabled btn-outline"
+              tabIndex={-1}
             >
               {page}
             </button>
           )
-        )}
+        ))}
       </div>
-
-      {/* Botón siguiente */}
-      <button
-        className="w-9 h-9 flex items-center justify-center rounded-md border border-base-300 bg-base-100 text-base-content/80 transition-colors hover:bg-base-200 disabled:opacity-50 disabled:hover:bg-base-100"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        aria-label="Página siguiente"
-      >
-        <ChevronRight size={18} />
-      </button>
+      
+      {/* Botones de navegación */}
+      <div className="join shadow-sm">
+        {/* Botón Siguiente */}
+        <button
+          className="join-item btn btn-sm btn-outline"
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          title="Página siguiente"
+        >
+          <ChevronRight size={16} />
+        </button>
+        
+        {/* Botón Última página */}
+        <button
+          className="join-item btn btn-sm btn-outline"
+          onClick={() => onPageChange(totalPages)}
+          disabled={currentPage === totalPages}
+          title="Última página"
+        >
+          <ChevronsRight size={16} />
+        </button>
+      </div>
+      
+      {/* Información de página */}
+      <div className="text-xs text-base-content/70 ml-2">
+        Página <span className="font-medium text-base-content">{currentPage}</span> de{" "}
+        <span className="font-medium text-base-content">{totalPages}</span>
+      </div>
     </div>
   );
 }

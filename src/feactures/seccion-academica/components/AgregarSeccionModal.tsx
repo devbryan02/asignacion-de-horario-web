@@ -107,7 +107,7 @@ export default function AgregarSeccionModal({ isOpen, onClose, onCreateSeccion }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-base-content/45 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div 
         ref={modalRef} 
         className="bg-base-100 rounded-lg shadow-xl w-full max-w-md border border-base-300"

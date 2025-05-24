@@ -1,5 +1,10 @@
 import { FilterX, Filter } from "lucide-react";
-import { FilterTipo } from "../hooks/useCursos";
+
+// Definir el tipo FilterTipo
+export type FilterTipo = {
+  teorico: boolean;
+  laboratorio: boolean;
+};
 
 interface CursoFiltersProps {
   filterTipo: FilterTipo;

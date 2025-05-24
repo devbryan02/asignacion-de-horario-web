@@ -5,13 +5,13 @@ import {
   School,
   Users,
   CalendarClock,
-  Book,
   Layers,
   Clock4,
   Settings,
   LayoutDashboard,
   Menu,
   X,
+  Brain
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -80,7 +80,6 @@ export default function DashboardLayout({
                 { href: "/dashboard/aulas", icon: <School className="w-4.5 h-4.5" />, label: "Aulas" },
                 { href: "/dashboard/docentes", icon: <Users className="w-4.5 h-4.5" />, label: "Docentes" },
                 { href: "/dashboard/restricciones", icon: <Settings className="w-4.5 h-4.5" />, label: "Restricciones" },
-                { href: "/dashboard/unidades-academicas", icon: <Book className="w-4.5 h-4.5" />, label: "Unidades Académicas" },
                 { href: "/dashboard/cursos", icon: <Layers className="w-4.5 h-4.5" />, label: "Cursos" },
                 { href: "/dashboard/secciones", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Secciones" },
                 { href: "/dashboard/bloques-de-horario", icon: <Clock4 className="w-4.5 h-4.5" />, label: "Bloques de Horario" },
@@ -114,8 +113,8 @@ export default function DashboardLayout({
             </div>
             <ul className="space-y-0.5">
               {[
-                { href: "/dashboard/generador", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Generador" },
-                { href: "/dashboard/Visualizar", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Visualizar" },
+                { href: "/dashboard/generar-horario", icon: <Brain className="w-4.5 h-4.5" />, label: "Generar Horario" },
+                { href: "/dashboard/visualizar", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Ver Horario " },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
@@ -186,7 +185,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Main content */}
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <main className="flex-1 p-4 md:p-4 overflow-auto">
           {children}
         </main>
       </div>

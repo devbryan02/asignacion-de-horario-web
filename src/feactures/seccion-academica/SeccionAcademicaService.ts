@@ -35,7 +35,7 @@ export async function createSeccionAcademica(seccion: SeccionRequest): Promise<S
 // Actualizar sección
 export async function updateSeccionAcademica(id: UUID, seccion: SeccionRequest): Promise<SeccionResponse> {
   try {
-    const response = await apiClient.put<SeccionResponse>(`/seccion-academica/${id}`, seccion);
+    const response = await apiClient.patch<SeccionResponse>(`/seccion-academica/${id}`, seccion);
     return response.data;
   } catch (error) {
     console.error("Error updating seccion academica:", error);

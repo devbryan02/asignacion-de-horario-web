@@ -1,106 +1,229 @@
-import { useState, useEffect, useMemo } from 'react';
-import { CursoResponse } from '@/types/response/CursoResponse';
-import { fetchCursos } from '../CursoService';
-import toast from 'react-hot-toast';
+import { useState, useEffect, useMemo } from "react";
+import { CursoResponse } from "@/types/response/CursoResponse";
+import { CursoRequest } from "@/types/request/CursoRequest";
+import {
+  fetchCursos,
+  createCurso,
+  updateCurso,
+  deleteCurso,
+  addSeccionesBulk,
+  CursoSeccionBulkRequest,
+  RegistroResponse
+} from "@/feactures/curso/CursoService";
+import toast from "react-hot-toast";
+import { UUID } from "crypto";
+import Swal from "sweetalert2";
 
+// Tipo para los filtros de tipo de curso
 export type FilterTipo = {
   teorico: boolean;
   laboratorio: boolean;
 };
 
 export function useCursos() {
-  // Estados
+  // Estado para los cursos y operaciones
   const [cursos, setCursos] = useState<CursoResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [cursoEditando, setCursoEditando] = useState<CursoResponse | null>(null);
+
+  // Estados para búsqueda y filtros
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterTipo, setFilterTipo] = useState<FilterTipo>({
     teorico: false,
-    laboratorio: false,
+    laboratorio: false
   });
-  
-  // Paginación
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
 
-  // Cargar datos
+  // Cargar cursos al montar el componente
+  useEffect(() => {
+    loadCursos();
+  }, []);
+
+  // Función para cargar cursos
   const loadCursos = async () => {
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       const data = await fetchCursos();
       setCursos(data);
     } catch (error) {
-      console.error('Error fetching cursos:', error);
-      toast.error('Error al cargar los cursos.');
+      console.error("Error loading courses:", error);
+      toast.error("No se pudieron cargar los cursos. Intente de nuevo más tarde.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Cargar al montar
-  useEffect(() => {
-    loadCursos();
-  }, []);
-
-  // Filtrar cursos
+  // Memoizar cursos filtrados para evitar recálculos innecesarios
   const filteredCursos = useMemo(() => {
-    return cursos.filter((curso) => {
-      // Filtrado por texto de búsqueda
-      const matchesSearch = curso.nombre.toLowerCase().includes(searchQuery.toLowerCase());
+    return cursos.filter(curso => {
+      // Filtro por búsqueda
+      const matchesSearch = searchQuery === "" ||
+        curso.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (curso.unidadAcademica &&
+          curso.unidadAcademica.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      // Filtrado por tipo de curso
-      const noTipoFiltersActive = !filterTipo.teorico && !filterTipo.laboratorio;
-
-      const matchesTipo = noTipoFiltersActive ||
-        (filterTipo.teorico && curso.tipo === 'TEORICO') ||
-        (filterTipo.laboratorio && curso.tipo === 'LABORATORIO');
+      // Filtro por tipo
+      const matchesTipo = (!filterTipo.teorico && !filterTipo.laboratorio) ||
+        (filterTipo.teorico && curso.tipo === "TEORICO") ||
+        (filterTipo.laboratorio && curso.tipo === "LABORATORIO");
 
       return matchesSearch && matchesTipo;
     });
   }, [cursos, searchQuery, filterTipo]);
 
-  // Calcular paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredCursos.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredCursos.length / itemsPerPage);
-
-  // Manejadores
-  const handleFilterChange = (type: keyof FilterTipo) => {
-    setFilterTipo((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-    setCurrentPage(1);
+  // Crear curso
+  const handleCreateCurso = async (curso: CursoRequest): Promise<CursoResponse> => {
+    try {
+      setIsLoading(true);
+      const newCurso = await createCurso(curso);
+      setCursos(prevCursos => [...prevCursos, newCurso]);
+      //refrescar la lista de cursos
+      await loadCursos();
+      return newCurso;
+    } catch (error) {
+      console.error("Error creating course:", error);
+      toast.error("No se pudo crear el curso. Intente de nuevo.");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // Editar curso
+  const handleEditCurso = (curso: CursoResponse) => {
+    setCursoEditando(curso);
+  };
+
+  // Actualizar curso
+  const handleUpdateCurso = async (cursoId: UUID, cursoActualizado: CursoRequest) => {
+    try {
+      setIsLoading(true);
+      const updated = await updateCurso(cursoId, cursoActualizado);
+      setCursos(prevCursos =>
+        prevCursos.map(c => c.id === cursoId ? updated : c)
+      );
+      await loadCursos();
+      setCursoEditando(null);
+      return updated;
+    } catch (error) {
+      console.error("Error updating course:", error);
+      toast.error("No se pudo actualizar el curso. Intente de nuevo.");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Eliminar curso
+  const handleDeleteCurso = async (cursoId: UUID) => {
+    // Confirmación de eliminación con SweetAlert2
+    const result = await Swal.fire({
+      title: '¿Está seguro?',
+      text: "Esta acción no se puede deshacer. Se eliminará el curso y todas sus asignaciones.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await deleteCurso(cursoId);
+      setCursos(prevCursos => prevCursos.filter(c => c.id !== cursoId));
+      toast.success("Curso eliminado correctamente");
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      toast.error("No se pudo eliminar el curso. Intente de nuevo.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAsignarSeccionesBulk = async (
+    cursoId: UUID,
+    seccionIds: UUID[]
+  ): Promise<RegistroResponse> => {
+    try {
+      setIsLoading(true);
+
+      const request: CursoSeccionBulkRequest = {
+        cursoId,
+        seccionesIds: seccionIds,
+        modo: "PRESENCIAL", // O el modo que esté definido en tu API
+      };
+
+      // Llamamos al servicio y esperamos un RegistroResponse
+      const response = await addSeccionesBulk(request);
+
+      // Si la operación fue exitosa según la respuesta de la API
+      if (response.success) {
+        return {
+          success: true,
+          message: response.message || `Se asignaron correctamente ${seccionIds.length} secciones.`
+        };
+      }
+
+      // Si la API indica que hubo un error
+      return {
+        success: false,
+        message: response.message || "No se pudieron asignar las secciones."
+      };
+
+    } catch (error) {
+      console.error("Error inesperado al asignar secciones:", error);
+
+      // Manejo de errores no controlados
+      return {
+        success: false,
+        message: "Ocurrió un error inesperado al asignar las secciones."
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  // Cambiar filtro de tipo
+  const handleFilterChange = (tipoKey: keyof FilterTipo) => {
+    setFilterTipo(prev => ({
+      ...prev,
+      [tipoKey]: !prev[tipoKey]
+    }));
+  };
+
+  // Limpiar todos los filtros
+  const clearFilters = () => {
+    setSearchQuery("");
+    setFilterTipo({ teorico: false, laboratorio: false });
+  };
+
+  // Manejador de cambio para la búsqueda
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setCurrentPage(1);
   };
-
-  const clearFilters = () => {
-    setFilterTipo({ teorico: false, laboratorio: false });
-    setSearchQuery('');
-    setCurrentPage(1);
-  };
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return {
     cursos,
     filteredCursos,
-    currentItems,
     isLoading,
-    searchQuery,
-    filterTipo,
-    currentPage,
-    totalPages,
-    indexOfFirstItem,
-    indexOfLastItem,
+    cursoEditando,
+    setCursoEditando,
     loadCursos,
-    handleFilterChange,
+    handleCreateCurso,
+    handleEditCurso,
+    handleUpdateCurso,
+    handleDeleteCurso,
+    handleAsignarSeccionesBulk,
+    // Búsqueda y filtros
+    searchQuery,
     handleSearchChange,
-    clearFilters,
-    paginate,
+    filterTipo,
+    handleFilterChange,
+    clearFilters
   };
 }

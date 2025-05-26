@@ -1,21 +1,22 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface AulaPaginationProps {
+interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-export default function AulaPagination({ 
+// Renombrado para ser más genérico y reutilizable
+export default function Pagination({ 
   currentPage, 
   totalPages,
   onPageChange 
-}: AulaPaginationProps) {
+}: PaginationProps) {
   if (totalPages <= 1) return null;
   
-  // Función para generar los números de página con elipsis
+  // Esta función se mantiene aquí porque es específica de la visualización UI
   const getPageNumbers = () => {
-    const pageNumbers = [];
+    const pageNumbers: (number | string)[] = [];
     const maxPagesToShow = 5;
     
     if (totalPages <= maxPagesToShow) {
@@ -24,40 +25,39 @@ export default function AulaPagination({
         pageNumbers.push(i);
       }
     } else {
-      // Siempre mostrar la primera página
+      // Lógica para mostrar subconjunto de páginas
       pageNumbers.push(1);
       
-      // Calcular el rango de páginas alrededor de la actual
-      let startPage = Math.max(2, currentPage - 1);
-      let endPage = Math.min(totalPages - 1, currentPage + 1);
+      if (currentPage > 3) {
+        pageNumbers.push('...');
+      }
       
-      // Ajustar si estamos cerca del inicio
+      let startPage: number, endPage: number;
+      
       if (currentPage <= 3) {
-        endPage = 4;
+        startPage = 2;
+        endPage = Math.min(4, totalPages - 1);
+      } else if (currentPage >= totalPages - 2) {
+        startPage = Math.max(totalPages - 3, 2);
+        endPage = totalPages - 1;
+      } else {
+        startPage = currentPage - 1;
+        endPage = currentPage + 1;
       }
       
-      // Ajustar si estamos cerca del final
-      if (currentPage >= totalPages - 2) {
-        startPage = totalPages - 3;
-      }
-      
-      // Añadir elipsis si es necesario
-      if (startPage > 2) {
-        pageNumbers.push('...');
-      }
-      
-      // Añadir páginas del medio
       for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
+        if (i > 1) {
+          pageNumbers.push(i);
+        }
       }
       
-      // Añadir elipsis si es necesario
-      if (endPage < totalPages - 1) {
+      if (currentPage < totalPages - 2) {
         pageNumbers.push('...');
       }
       
-      // Siempre mostrar la última página
-      pageNumbers.push(totalPages);
+      if (totalPages > 1) {
+        pageNumbers.push(totalPages);
+      }
     }
     
     return pageNumbers;
@@ -66,7 +66,7 @@ export default function AulaPagination({
   const pageNumbers = getPageNumbers();
   
   return (
-    <div className="flex justify-center items-center gap-1 mt-6">
+    <div className="flex justify-center items-center gap-1 mt-4">
       <button
         className="h-8 w-8 rounded-md flex items-center justify-center text-base-content/70 hover:bg-base-200 hover:text-base-content transition-colors disabled:opacity-40 disabled:pointer-events-none"
         onClick={() => onPageChange(currentPage - 1)}

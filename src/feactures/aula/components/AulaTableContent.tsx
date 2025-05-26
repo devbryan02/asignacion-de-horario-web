@@ -124,7 +124,7 @@ export default function AulaTableContent({
                     <td className="py-3 px-4 text-sm text-base-content">{aula.nombre}</td>
                     <td className="py-3 px-4 text-sm text-base-content">
                       <div className="font-medium">{aula.capacidad}</div>
-                      <div className="text-xs text-base-content/60">estudiantes</div>
+                      <div className="text-xs text-base-content/60">Estudiantes</div>
                     </td>
                     <td className="py-3 px-4 text-sm">
                       <div className={`
@@ -141,18 +141,18 @@ export default function AulaTableContent({
                     <td className="py-3 px-4 text-right">
                       <div className="flex justify-start gap-2">
                         <button
-                          className="p-1.5 rounded-md bg-info/10 text-info hover:bg-info/20 transition-colors"
+                          className="p-1.5 inline-flex items-center gap-1 rounded-md bg-info/10 text-info hover:bg-info/20 transition-colors"
                           onClick={() => handleEditClick(aula)}
                           aria-label="Editar aula"
                         >
-                          <Pencil size={16} />
+                          <Pencil size={16} /> Editar
                         </button>
                         <button
-                          className="p-1.5 rounded-md bg-error/10 text-error hover:bg-error/20 transition-colors"
+                          className="p-1.5 inline-flex items-center gap-1 rounded-md bg-error/10 text-error hover:bg-error/20 transition-colors"
                           onClick={() => handleDelete(aula)}
                           aria-label="Eliminar aula"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={16} />Eliminar
                         </button>
                       </div>
                     </td>

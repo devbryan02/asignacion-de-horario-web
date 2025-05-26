@@ -18,7 +18,7 @@ export function useAulas() {
     laboratorio: false,
   });
   
-  // Paginación
+  // Paginación - solo mantenemos lo básico
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -72,20 +72,18 @@ export function useAulas() {
       ...prev,
       [type]: !prev[type],
     }));
-    setCurrentPage(1);
+    setCurrentPage(1); // Reiniciar a primera página al filtrar
   };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reiniciar a primera página al buscar
   };
 
   const clearFilters = () => {
     setFilterTypes({ teorico: false, laboratorio: false });
     setCurrentPage(1);
   };
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return {
     aulas,
@@ -94,14 +92,17 @@ export function useAulas() {
     isLoading,
     searchQuery,
     filterTypes,
+    
+    // Paginación - solo lo esencial para usar con AulaPagination
     currentPage,
     totalPages,
+    onPageChange: setCurrentPage, // Renombrado para ser más claro
+    
     indexOfFirstItem,
     indexOfLastItem,
     loadAulas,
     handleFilterChange,
     handleSearchChange,
     clearFilters,
-    paginate,
   };
 }

@@ -53,34 +53,29 @@ export interface ApiErrorDelete {
   error?: string;
   message?: string;
   path?: string;
-  tipo?: string; // Mantenemos este campo por compatibilidad
 }
 
-export const deleteCurso = async (id: UUID): Promise<void> => {
+export const deleteCurso = async (id: UUID): Promise<ApiErrorDelete> => {
   try {
-    await apiClient.delete(`/curso/${id}`);
-  } catch (error) {
+    const response = await apiClient.delete(`/curso/${id}`);
+    return {
+      message: response.data.message || "Curso eliminado correctamente",
+      status: response.data.status || 200,
+    };
+  } catch (error: any) {
     console.error(`Error deleting curso with ID ${id}:`, error);
 
-    // Manejo específico de errores desde la API
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<ApiErrorDelete>;
+    //extraer el mensaje de error
+    let errorMessage = error.response.data.message || error.response.data.error || error.message || "Error desconocido al eliminar el curso";
+    let status = error.response.status || 500;
 
-      // Si tenemos datos de error de la API, los propagamos
-      if (axiosError.response?.data) {
-        const apiError = axiosError.response.data;
-        throw {
-          tipo: apiError.error || "Error",
-          mensaje: apiError.message || "Ocurrió un error al eliminar el curso",
-          statusCode: axiosError.response.status
-        };
-      }
+    return {
+      message: errorMessage,
+      status: status,
+      error: error.response.data.error || "Error",
     }
-    // Si no es un error específico, lanzar el error original
-    throw error;
-  }
-};
-
+  };
+}
 // Interfaz para la petición bulk
 export interface CursoSeccionBulkRequest {
   cursoId: UUID;
@@ -110,7 +105,7 @@ export const addSeccionesBulk = async (request: CursoSeccionBulkRequest): Promis
 
       if (axiosError.response?.data) {
         const apiError = axiosError.response.data;
-        
+
         // Retornamos un objeto RegistroResponse en lugar de lanzar un error
         return {
           success: false,

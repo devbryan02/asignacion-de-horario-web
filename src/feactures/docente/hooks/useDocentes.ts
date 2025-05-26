@@ -36,7 +36,6 @@ export function useDocentes() {
       setDocentes(data);
     } catch (error) {
       console.error('Error fetching docentes:', error);
-      toast.error('Error al cargar los docentes.');
     } finally {
       setIsLoading(false);
     }

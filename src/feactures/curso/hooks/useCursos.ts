@@ -8,7 +8,8 @@ import {
   deleteCurso,
   addSeccionesBulk,
   CursoSeccionBulkRequest,
-  RegistroResponse
+  RegistroResponse,
+  ApiErrorDelete
 } from "@/feactures/curso/CursoService";
 import toast from "react-hot-toast";
 import { UUID } from "crypto";
@@ -133,9 +134,23 @@ export function useCursos() {
 
     try {
       setIsLoading(true);
-      await deleteCurso(cursoId);
+      const response: ApiErrorDelete = await deleteCurso(cursoId);
       setCursos(prevCursos => prevCursos.filter(c => c.id !== cursoId));
-      toast.success("Curso eliminado correctamente");
+      await loadCursos();
+      if (response.error != "Internal Server Error") {
+        toast.success("Curso eliminado correctamente.");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "No se pudo eliminar el curso",
+          html: `
+          <p><i>${response.message}</i></p>
+          <p>Para continuar, desvincula el curso de las secciones asociadas y vuelve a intentarlo.</p>`,
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#d33"
+        });
+
+      }
     } catch (error) {
       console.error("Error deleting course:", error);
       toast.error("No se pudo eliminar el curso. Intente de nuevo.");
@@ -159,7 +174,6 @@ export function useCursos() {
 
       // Llamamos al servicio y esperamos un RegistroResponse
       const response = await addSeccionesBulk(request);
-
       // Si la operación fue exitosa según la respuesta de la API
       if (response.success) {
         return {

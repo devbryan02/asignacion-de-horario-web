@@ -23,7 +23,7 @@ export default function AulaDataTable() {
     handleFilterChange,
     handleSearchChange,
     clearFilters,
-    paginate,
+    onPageChange,
   } = useAulas();
 
   return (
@@ -82,7 +82,7 @@ export default function AulaDataTable() {
           <AulaPagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={paginate}
+            onPageChange={onPageChange}
           />
         </div>
       </div>

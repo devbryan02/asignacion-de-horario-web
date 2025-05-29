@@ -47,7 +47,12 @@ export async function getBloqueHorarioById(id: UUID): Promise<BloqueHorario> {
 
 export async function createBloqueHorario(request: BloqueHorarioRequest): Promise<BloqueHorarioResponse> {
     try {
-        const response = await apiClient.post<BloqueHorarioResponse>('/bloque-horario', request);
+        const formattedRequest = {
+            ...request,
+            horaInicio: request.horaInicio.substring(0, 5),
+            horaFin: request.horaFin.substring(0, 5)
+        }
+        const response = await apiClient.post<BloqueHorarioResponse>('/bloque-horario', formattedRequest);
         return {
             success: response.data.success,
             message: response.data.message
@@ -80,7 +85,12 @@ export async function createBloqueHorario(request: BloqueHorarioRequest): Promis
 
 export async function updateBloqueHorario(id: UUID, request: BloqueHorarioRequest): Promise<BloqueHorarioResponse> {
     try {
-        const response = await apiClient.patch<BloqueHorarioResponse>(`/bloque-horario/${id}`, request);
+        const formattedRequest = {
+            ...request,
+            horaInicio: request.horaInicio.substring(0, 5),
+            horaFin: request.horaFin.substring(0, 5)
+        }
+        const response = await apiClient.patch<BloqueHorarioResponse>(`/bloque-horario/${id}`, formattedRequest);
         return {
             success: response.data.success,
             message: response.data.message

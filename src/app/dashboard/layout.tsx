@@ -84,7 +84,7 @@ export default function DashboardLayout({
                 { href: "/dashboard/restricciones", icon: <Settings className="w-4.5 h-4.5" />, label: "Restricciones" },
                 { href: "/dashboard/secciones", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Secciones" },
                 { href: "/dashboard/cursos", icon: <Layers className="w-4.5 h-4.5" />, label: "Cursos" },
-                { href: "/dashboard/bloques-de-horario", icon: <Clock4 className="w-4.5 h-4.5" />, label: "Bloques de Horario" },
+                { href: "/dashboard/bloques-de-horario", icon: <Clock4 className="w-4.5 h-4.5" />, label: "Bloques" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link

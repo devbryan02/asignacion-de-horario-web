@@ -1,6 +1,8 @@
+import BloqueContent from "@/feactures/bloque-horario/components/BloqueContent";
+
 function BloquesPage() {
     return ( 
-        <h2>Aqui los bloquesXD</h2>
+        <BloqueContent />
      );
 }
 

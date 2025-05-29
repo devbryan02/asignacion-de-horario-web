@@ -6,7 +6,8 @@ import AulaSearchBar from './AulaSearchBar';
 import AulaFilters from './AulaFilters';
 import AulaTableContent from './AulaTableContent';
 import AulaPagination from './AulaPagination';
-import AulaResultsInfo from './AulaResultsInfo';
+import AgregarAulaModal from './AgregarAulaModal';
+import EditarAulaModal from './EditarAulaModal';
 
 export default function AulaDataTable() {
   const {
@@ -14,71 +15,62 @@ export default function AulaDataTable() {
     isLoading,
     searchQuery,
     filterTypes,
+    modalState,
+    formData,
     currentPage,
     totalPages,
-    filteredAulas,
-    indexOfFirstItem,
-    indexOfLastItem,
-    loadAulas,
     handleFilterChange,
     handleSearchChange,
     clearFilters,
     onPageChange,
+    openCreateModal,
+    openUpdateModal,
+    closeModal,
+    handleInputChange,
+    handleSubmit,
+    handleDeleteAula,
   } = useAulas();
 
   return (
     <div className="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
       <div className="p-6">
-        <AulaTableHeader onAulaCreated={loadAulas} />
+        <AulaTableHeader onCreateClick={openCreateModal} />
       </div>
 
       <div className="px-6">
-        <div className="border-t border-base-200 pt-5 mb-6">
-          {/* Nueva organización: primero filtro, luego buscador, luego info */}
-          <div className="flex flex-col md:flex-row items-start gap-4">
-            {/* Filtros primero */}
-            <div className="w-full md:w-1/3 lg:w-2/5">
-              <AulaFilters
-                filterTypes={filterTypes}
-                onFilterChange={handleFilterChange}
-                onClearFilters={clearFilters}
-              />
-            </div>
-            
-            {/* Contenedor para buscador e info en columna */}
-            <div className="w-full md:w-2/3 lg:w-3/5 flex flex-col gap-3">
-              {/* Buscador */}
-              <div className="w-full">
-                <AulaSearchBar 
-                  searchQuery={searchQuery}
-                  onSearchChange={handleSearchChange}
-                />
-              </div>
-              
-              {/* Info debajo del buscador */}
-              <div className="self-start">
-                <AulaResultsInfo
-                  totalCount={filteredAulas.length}
-                  startIndex={indexOfFirstItem}
-                  endIndex={Math.min(indexOfLastItem, filteredAulas.length)}
-                />
-              </div>
-            </div>
+        {/* Filtros y buscador en fila (responsive) */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+          {/* Filtros */}
+          <div className="w-full md:flex-1">
+            <AulaFilters
+              filterTypes={filterTypes}
+              onFilterChange={handleFilterChange}
+              onClearFilters={clearFilters}
+            />
+          </div>
+
+          {/* Buscador */}
+          <div className="w-full md:flex-1">
+            <AulaSearchBar
+              searchQuery={searchQuery}
+              onSearchChange={handleSearchChange}
+            />
           </div>
         </div>
 
-        {/* Contenido principal de la tabla */}
-        <div className="mb-6">
-          <AulaTableContent 
-            isLoading={isLoading} 
-            aulas={currentItems} 
-            onAulaUpdated={(aula) => console.log('Edit aula', aula)}
-            onDelete={(id) => console.log('Delete aula', id)}
+
+        {/* Tabla de contenido */}
+        <div className="mb-4">
+          <AulaTableContent
+            isLoading={isLoading}
+            aulas={currentItems}
+            onAulaUpdated={openUpdateModal}
+            onDelete={handleDeleteAula}
           />
         </div>
 
         {/* Paginación */}
-        <div className="flex justify-center border-t border-base-200 pt-5 pb-2">
+        <div className="flex justify-center pt-0 pb-3">
           <AulaPagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -86,6 +78,31 @@ export default function AulaDataTable() {
           />
         </div>
       </div>
+
+      {/* Modal para crear aula */}
+      {modalState.type === 'create' && (
+        <AgregarAulaModal
+          isOpen={modalState.isOpen}
+          isLoading={modalState.isLoading}
+          formData={formData}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          onClose={closeModal}
+        />
+      )}
+
+      {/* Modal para editar aula */}
+      {modalState.type === 'update' && modalState.aula && (
+        <EditarAulaModal
+          isOpen={modalState.isOpen}
+          isLoading={modalState.isLoading}
+          formData={formData}
+          aulaId={modalState.aula.id}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }

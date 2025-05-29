@@ -18,35 +18,22 @@ export default function AulaFilters({ filterTypes, onFilterChange, onClearFilter
   const activeCount = Object.values(filterTypes).filter(Boolean).length;
 
   return (
-    <div className="bg-base-100 border border-base-300 rounded-lg p-3 shadow-sm">
-      {/* Header con título y botón limpiar */}
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-1.5">
-          <Filter size={14} className="text-primary" />
-          <h3 className="text-sm font-medium">Filtrar por tipo</h3>
-        </div>
-        
-        {hasActiveFilters && (
-          <button
-            className="text-xs flex items-center gap-1 py-1 px-1.5 rounded hover:bg-base-200 text-base-content/70"
-            onClick={onClearFilters}
-          >
-            <FilterX size={12} />
-            <span>Limpiar{activeCount > 1 ? ` (${activeCount})` : ''}</span>
-          </button>
-        )}
+    <div className="bg-base-100 flex items-center gap-3 flex-wrap p-2 rounded-md">
+      {/* Sección del título */}
+      <div className="flex items-center gap-1.5">
+        <Filter size={14} className="text-primary" />
+        <h3 className="text-sm font-medium">Filtrar por tipo</h3>
       </div>
-      
+
       {/* Botones de filtro */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2">
         {filterOptions.map(option => (
-          <label 
+          <label
             key={option.key}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md cursor-pointer ${
-              filterTypes[option.key] 
-                ? 'bg-primary/10 border border-primary/20' 
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md cursor-pointer ${filterTypes[option.key]
+                ? 'bg-primary/10 border border-primary/20'
                 : 'bg-base-200/50 border border-transparent hover:bg-base-200'
-            }`}
+              }`}
           >
             <div className={filterTypes[option.key] ? 'text-primary' : 'text-base-content/40'}>
               <CheckSquare size={15} className={filterTypes[option.key] ? 'opacity-100' : 'opacity-0'} />
@@ -63,10 +50,21 @@ export default function AulaFilters({ filterTypes, onFilterChange, onClearFilter
           </label>
         ))}
       </div>
-      
+
+      {/* Botón limpiar filtros */}
+      {hasActiveFilters && (
+        <button
+          className="text-xs flex items-center gap-1 py-1 px-1.5 rounded hover:bg-base-200 text-base-content/70"
+          onClick={onClearFilters}
+        >
+          <FilterX size={12} />
+          <span>Limpiar{activeCount > 1 ? ` (${activeCount})` : ''}</span>
+        </button>
+      )}
+
       {/* Indicador de filtros activos */}
       {hasActiveFilters && (
-        <div className="mt-2 text-xs text-base-content/60">
+        <div className="text-xs text-base-content/60">
           {`Mostrando aulas con ${activeCount} filtro${activeCount > 1 ? 's' : ''} aplicado${activeCount > 1 ? 's' : ''}`}
         </div>
       )}

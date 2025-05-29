@@ -1,13 +1,12 @@
 import { School } from "lucide-react";
-import AgregarAulaModal from "./AgregarAulaModal";
 
 interface AulaTableHeaderProps {
-  onAulaCreated: () => void;
+  onCreateClick: () => void; // Función para abrir el modal de creación
 }
 
-export default function AulaTableHeader({ onAulaCreated }: AulaTableHeaderProps) {
+export default function AulaTableHeader({ onCreateClick }: AulaTableHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 ">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
       <div className="flex items-start gap-3">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary border border-primary/20">
           <School size={20} />
@@ -18,7 +17,12 @@ export default function AulaTableHeader({ onAulaCreated }: AulaTableHeaderProps)
         </div>
       </div>
       <div className="self-end sm:self-auto">
-        <AgregarAulaModal onAulaCreated={onAulaCreated} />
+        <button 
+          className="btn btn-primary btn-sm"
+          onClick={onCreateClick}
+        >
+          Agregar Aula
+        </button>
       </div>
     </div>
   );

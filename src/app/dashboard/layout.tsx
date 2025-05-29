@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   Menu,
   X,
-  Brain
+  Brain,
+  CalendarRange
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -77,11 +78,12 @@ export default function DashboardLayout({
             <ul className="space-y-0.5">
               {[
                 { href: "/dashboard", icon: <LayoutDashboard className="w-4.5 h-4.5" />, label: "Dashboard" },
+                { href: "/dashboard/periodo-academico", icon: <CalendarRange className="w-4.5 h-4.5" />, label: "Periodos" },
                 { href: "/dashboard/aulas", icon: <School className="w-4.5 h-4.5" />, label: "Aulas" },
                 { href: "/dashboard/docentes", icon: <Users className="w-4.5 h-4.5" />, label: "Docentes" },
                 { href: "/dashboard/restricciones", icon: <Settings className="w-4.5 h-4.5" />, label: "Restricciones" },
-                { href: "/dashboard/cursos", icon: <Layers className="w-4.5 h-4.5" />, label: "Cursos" },
                 { href: "/dashboard/secciones", icon: <CalendarClock className="w-4.5 h-4.5" />, label: "Secciones" },
+                { href: "/dashboard/cursos", icon: <Layers className="w-4.5 h-4.5" />, label: "Cursos" },
                 { href: "/dashboard/bloques-de-horario", icon: <Clock4 className="w-4.5 h-4.5" />, label: "Bloques de Horario" },
               ].map((item) => (
                 <li key={item.href}>

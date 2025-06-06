@@ -23,7 +23,7 @@ export default function DocenteTableHeader({ onDocenteCreated }: DocenteTableHea
       </div>
       
       <div className="self-stretch sm:self-center">
-        <AgregarDocenteModal onDocenteCreated={onDocenteCreated} />
+        <AgregarDocenteModal onAddedDocente={onDocenteCreated} />
       </div>
     </div>
   );

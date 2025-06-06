@@ -74,7 +74,10 @@ export default function CursoTableContent({
               className="border-b border-base-200 hover:bg-base-200/40 group transition-colors"
             >
               <td>
-                <div className="font-medium text-base-content">{curso.nombre}</div>
+                <div className="font-medium text-base-content">
+                  <BookOpen size={16} className="inline-block mr-2 " />
+                  {curso.nombre}
+                </div>
               </td>
               <td>
                 <span className={getTipoColor(curso.tipo)}>
@@ -98,17 +101,17 @@ export default function CursoTableContent({
                     title="Editar curso"
                   >
                     <Pencil size={16} />
-                    <span className="ml-1 hidden sm:inline">Editar</span>
+                    <span className="ml-1 hidden sm:inline"></span>
                   </button>
                   
                   {onAsignarSecciones && (
                     <button
                       onClick={() => onAsignarSecciones(curso)}
-                      className="btn btn-ghost btn-sm text-warning"
+                      className="btn btn-ghost btn-sm text-secondary"
                       title="Asignar secciones"
                     >
                       <Users size={16} />
-                      <span className="ml-1 hidden sm:inline">Secciones</span>
+                      <span className="ml-1 hidden sm:inline">Asig. Secciones</span>
                     </button>
                   )}
                   
@@ -118,7 +121,7 @@ export default function CursoTableContent({
                     title="Eliminar curso"
                   >
                     <Trash2 size={16} />
-                    <span className="ml-1 hidden sm:inline">Eliminar</span>
+                    <span className="ml-1 hidden sm:inline"></span>
                   </button>
                 </div>
               </td>

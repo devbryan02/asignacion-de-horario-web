@@ -11,13 +11,11 @@ import { CursoResponse } from "@/types/response/CursoResponse";
 import { SeccionResponse } from "@/feactures/seccion-academica/types";
 import { fetchSeccionAcademica } from "@/feactures/seccion-academica/SeccionAcademicaService";
 import { UUID } from "crypto";
-import { CursoRequest } from "@/types/request/CursoRequest";
 import { RegistroResponse } from "../CursoService";
 
 export default function CursoDataTable() {
   // Usar el hook de cursos que proporciona toda la lógica de negocio
   const {
-    cursos,
     filteredCursos,
     isLoading,
     cursoEditando,

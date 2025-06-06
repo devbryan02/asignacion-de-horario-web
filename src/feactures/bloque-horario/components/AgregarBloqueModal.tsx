@@ -4,9 +4,11 @@ import { useBloques } from '../hooks/useBloques';
 import Swal from 'sweetalert2';
 import { Clock, Calendar, CheckCircle2, X } from 'lucide-react';
 
+
 interface AgregarBloqueModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onBloqueAdded?: () => void;
 }
 
 const diasSemana = [
@@ -15,16 +17,19 @@ const diasSemana = [
   'MIERCOLES',
   'JUEVES',
   'VIERNES',
-  'SÁBADO',
+  'SABADO',
   'DOMINGO'
 ];
 
 const turnos = ['MANANA', 'TARDE', 'NOCHE'];
 
-function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
+function AgregarBloqueModal({ isOpen, onClose, onBloqueAdded }: AgregarBloqueModalProps) {
   const { createBloque } = useBloques();
   const [loading, setLoading] = useState(false);
-  
+
+
+
+
   const [formData, setFormData] = useState<BloqueHorarioRequest>({
     diaSemana: 'LUNES',
     horaInicio: '08:00',
@@ -51,36 +56,44 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
       });
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       const response = await createBloque(formData);
-      
+      if (onBloqueAdded) {
+        onBloqueAdded();
+      }
       if (response.success) {
+        // Mostrar mensaje de éxito temporal 
         Swal.fire({
-          title: '¡Éxito!',
-          text: 'Bloque horario creado correctamente',
+          toast: true,
+          position: 'top-end',
           icon: 'success',
+          title: response.message || 'Bloque horario creado',
           timer: 2000,
-          showConfirmButton: false
+          timerProgressBar: true,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'p-2 fs-6'
+          }
         });
-        
+
         // Restablecer el formulario
         setFormData({
           diaSemana: 'LUNES',
           horaInicio: '08:00',
           horaFin: '10:00',
-          turno: 'Mañana'
+          turno: 'MANANA'
         });
-        
+
         // Cerrar el modal
         onClose();
       } else {
@@ -116,16 +129,16 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
               </div>
               Agregar Nuevo Bloque
             </h3>
-            <button 
+            <button
               onClick={onClose}
               className="btn btn-sm btn-circle btn-ghost"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           <div className="divider my-0"></div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4 pt-2">
             {/* Día de la semana */}
             <div className="form-control w-full">
@@ -135,7 +148,7 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
                   Día de la semana
                 </span>
               </label>
-              <select 
+              <select
                 name="diaSemana"
                 value={formData.diaSemana}
                 onChange={handleChange}
@@ -156,7 +169,7 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
                   Turno
                 </span>
               </label>
-              <select 
+              <select
                 name="turno"
                 value={formData.turno}
                 onChange={handleChange}
@@ -175,8 +188,8 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
                 <label className="label">
                   <span className="label-text font-medium">Hora inicio</span>
                 </label>
-                <input 
-                  type="time" 
+                <input
+                  type="time"
                   name="horaInicio"
                   value={formData.horaInicio}
                   onChange={handleChange}
@@ -189,8 +202,8 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
                 <label className="label">
                   <span className="label-text font-medium">Hora fin</span>
                 </label>
-                <input 
-                  type="time" 
+                <input
+                  type="time"
                   name="horaFin"
                   value={formData.horaFin}
                   onChange={handleChange}
@@ -201,21 +214,20 @@ function AgregarBloqueModal({ isOpen, onClose }: AgregarBloqueModalProps) {
             </div>
 
             <div className="modal-action pt-3 ">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-sm btn-ghost px-4"
                 onClick={onClose}
                 disabled={loading}
               >
                 Cancelar
               </button>
-              <button 
-                type="submit" 
-                className={`btn btn-sm px-6 ${
-                  loading 
-                  ? 'loading bg-primary/70' 
-                  : 'bg-gradient-to-r from-primary to-primary-focus hover:shadow-md'
-                } text-white border-0`}
+              <button
+                type="submit"
+                className={`btn btn-sm px-6 ${loading
+                    ? 'loading bg-primary/70'
+                    : 'bg-gradient-to-r from-primary to-primary-focus hover:shadow-md'
+                  } text-white border-0`}
                 disabled={loading}
               >
                 {loading ? 'Guardando...' : (

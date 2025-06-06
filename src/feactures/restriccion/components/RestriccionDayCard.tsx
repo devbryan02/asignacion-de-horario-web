@@ -19,52 +19,52 @@ const getDayStyles = (dia: DiaSemana): {
   switch (dia) {
     case "LUNES": 
       return {
-        background: "bg-gradient-to-br from-primary/10 to-primary/30 hover:from-primary/20 hover:to-primary/40",
-        border: "border-primary/30 hover:border-primary",
-        icon: "text-primary bg-primary/20",
-        header: "from-primary/80 to-primary"
+        background: "bg-gradient-to-br from-primary/5 to-primary/20 hover:from-primary/10 hover:to-primary/30",
+        border: "border-primary/30 hover:border-primary/60",
+        icon: "text-primary bg-primary/10",
+        header: "from-primary/70 to-primary/90"
       };
     case "MARTES":
       return {
-        background: "bg-gradient-to-br from-secondary/10 to-secondary/30 hover:from-secondary/20 hover:to-secondary/40",
-        border: "border-secondary/30 hover:border-secondary",
-        icon: "text-secondary bg-secondary/20",
-        header: "from-secondary/80 to-secondary"
+        background: "bg-gradient-to-br from-secondary/5 to-secondary/20 hover:from-secondary/10 hover:to-secondary/30",
+        border: "border-secondary/30 hover:border-secondary/60",
+        icon: "text-secondary bg-secondary/10",
+        header: "from-secondary/70 to-secondary/90"
       };
     case "MIERCOLES":
       return {
-        background: "bg-gradient-to-br from-accent/10 to-accent/30 hover:from-accent/20 hover:to-accent/40",
-        border: "border-accent/30 hover:border-accent",
-        icon: "text-accent bg-accent/20",
-        header: "from-accent/80 to-accent"
+        background: "bg-gradient-to-br from-accent/5 to-accent/20 hover:from-accent/10 hover:to-accent/30",
+        border: "border-accent/30 hover:border-accent/60",
+        icon: "text-accent bg-accent/10",
+        header: "from-accent/70 to-accent/90"
       };
     case "JUEVES":
       return {
-        background: "bg-gradient-to-br from-info/10 to-info/30 hover:from-info/20 hover:to-info/40",
-        border: "border-info/30 hover:border-info",
-        icon: "text-info bg-info/20",
-        header: "from-info/80 to-info"
+        background: "bg-gradient-to-br from-info/5 to-info/20 hover:from-info/10 hover:to-info/30",
+        border: "border-info/30 hover:border-info/60",
+        icon: "text-info bg-info/10",
+        header: "from-info/70 to-info/90"
       };
     case "VIERNES":
       return {
-        background: "bg-gradient-to-br from-primary/10 to-primary/30 hover:from-primary/20 hover:to-primary/40",
-        border: "border-primary/30 hover:border-primary",
-        icon: "text-primary bg-primary/20",
-        header: "from-primary/80 to-primary"
+        background: "bg-gradient-to-br from-primary/5 to-primary/20 hover:from-primary/10 hover:to-primary/30",
+        border: "border-primary/30 hover:border-primary/60",
+        icon: "text-primary bg-primary/10",
+        header: "from-primary/70 to-primary/90"
       };
     case "SABADO":
       return {
-        background: "bg-gradient-to-br from-secondary/10 to-secondary/30 hover:from-secondary/20 hover:to-secondary/40",
-        border: "border-secondary/30 hover:border-secondary",
-        icon: "text-secondary bg-secondary/20",
-        header: "from-secondary/80 to-secondary"
+        background: "bg-gradient-to-br from-secondary/5 to-secondary/20 hover:from-secondary/10 hover:to-secondary/30",
+        border: "border-secondary/30 hover:border-secondary/60",
+        icon: "text-secondary bg-secondary/10",
+        header: "from-secondary/70 to-secondary/90"
       };
     case "DOMINGO":
       return {
-        background: "bg-gradient-to-br from-accent/10 to-accent/30 hover:from-accent/20 hover:to-accent/40",
-        border: "border-accent/30 hover:border-accent",
-        icon: "text-accent bg-accent/20",
-        header: "from-accent/80 to-accent"
+        background: "bg-gradient-to-br from-accent/5 to-accent/20 hover:from-accent/10 hover:to-accent/30",
+        border: "border-accent/30 hover:border-accent/60",
+        icon: "text-accent bg-accent/10",
+        header: "from-accent/70 to-accent/90"
       };
     default:
       return {
@@ -80,21 +80,24 @@ export default function RestriccionDayCard({ dia, restricciones }: RestriccionDa
   const styles = getDayStyles(dia);
   
   return (
-    <div className={`card overflow-hidden shadow-lg rounded-xl transition-all duration-300 hover:scale-105 ${styles.background} border ${styles.border}`}>
-      {/* Header con gradiente */}
-      <div className={`bg-gradient-to-r ${styles.header} p-3 text-white`}>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm">
-            <Calendar size={20} className="text-white" />
+    <div className={`card overflow-hidden shadow-md rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-102 ${styles.background} border ${styles.border}`}>
+      {/* Header con gradiente más compacto */}
+      <div className={`bg-gradient-to-r ${styles.header} py-2 px-3 text-white`}>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm">
+            <Calendar size={16} className="text-white" />
           </div>
-          <h3 className="text-xl font-bold">{formatDiaSemana(dia)}</h3>
+          <h3 className="font-bold">{formatDiaSemana(dia)}</h3>
+          <div className="ml-auto badge badge-sm badge-outline badge-white text-xs">
+            {restricciones.length}
+          </div>
         </div>
       </div>
 
-      <div className="card-body p-4">
+      <div className="card-body p-3">
         {/* Content */}
         {restricciones.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {restricciones.map((restriccion) => (
               <RestriccionItem 
                 key={restriccion.id} 
@@ -103,20 +106,20 @@ export default function RestriccionDayCard({ dia, restricciones }: RestriccionDa
             ))}
           </div>
         ) : (
-          <div className="py-8 text-center">
-            <div className={`mx-auto flex items-center justify-center w-12 h-12 mb-3 rounded-full ${styles.icon}`}>
-              <Calendar size={24} />
+          <div className="py-4 text-center">
+            <div className={`mx-auto flex items-center justify-center w-10 h-10 mb-2 rounded-full ${styles.icon}`}>
+              <Calendar size={18} />
             </div>
-            <p className="text-base-content/60 font-medium">
+            <p className="text-base-content/60 text-sm font-medium">
               Sin restricciones
             </p>
           </div>
         )}
       </div>
 
-      {/* Footer con contador */}
-      <div className="bg-base-200/50 p-3 text-center border-t border-base-300">
-        <span className="text-sm font-medium text-base-content/70">
+      {/* Footer con contador más compacto */}
+      <div className="bg-base-200/30 py-1.5 px-3 text-center border-t border-base-300/50">
+        <span className="text-xs font-medium text-base-content/70">
           {restricciones.length} {restricciones.length === 1 ? 'restricción' : 'restricciones'}
         </span>
       </div>

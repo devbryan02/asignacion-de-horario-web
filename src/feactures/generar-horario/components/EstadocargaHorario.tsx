@@ -28,7 +28,7 @@ export default function EstadoCargaHorario() {
 
   // Simular progreso y activación secuencial de pasos - ajustado para 10 segundos total
   useEffect(() => {
-    const totalDuration = 10000; // 10 segundos
+    const totalDuration = 30000; // 10 segundos
     const interval = 100; // Actualizar cada 100ms
     const incrementPerInterval = 100 / (totalDuration / interval);
     

@@ -18,7 +18,7 @@ export function useSecciones() {
   
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
 
   // Estado para edición
   const [seccionToEdit, setSeccionToEdit] = useState<SeccionResponse | null>(null);

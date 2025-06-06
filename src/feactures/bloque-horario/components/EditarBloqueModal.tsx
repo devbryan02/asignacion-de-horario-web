@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { BloqueHorario, BloqueHorarioRequest } from '../types';
 import { useBloques } from '../hooks/useBloques';
 import Swal from 'sweetalert2';
-import { UUID } from 'crypto';
 
 interface EditarBloqueModalProps {
   isOpen: boolean;

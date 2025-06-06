@@ -1,5 +1,5 @@
 import { DocenteResponse } from '@/types/response/DocenteResponse';
-import { Clock, Pencil, Trash2, Calendar, Loader2, AlertCircle } from 'lucide-react';
+import { Clock, Pencil, Trash2, Calendar, Loader2, AlertCircle, User } from 'lucide-react';
 import AgregarRestriccionModal from './AgregarRestriccionModal';
 import { UUID } from 'crypto';
 
@@ -11,8 +11,8 @@ interface DocenteTableContentProps {
   onDelete: (id: UUID, nombre: string) => void;
 }
 
-export default function DocenteTableContent({ 
-  isLoading, 
+export default function DocenteTableContent({
+  isLoading,
   docentes,
   onEdit,
   onDelete,
@@ -44,12 +44,15 @@ export default function DocenteTableContent({
                 </tr>
               ) : docentes && docentes.length > 0 ? (
                 docentes.map((docente) => (
-                  <tr 
-                    key={docente.id} 
+                  <tr
+                    key={docente.id}
                     className="border-b border-base-200 hover:bg-base-100/80 transition-colors"
                   >
                     <td className="py-3 px-4">
-                      <div className="font-medium text-base-content">{docente.nombre}</div>
+                      <div className="font-medium text-base-content">
+                        <User size={16} className="inline-block items-center justify-center mr-2 text-primary" />
+                        {docente.nombre}
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2 text-base-content">
@@ -76,21 +79,21 @@ export default function DocenteTableContent({
                     </td>
                     <td className="py-2 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button 
+                        <button
                           className="p-1.5 rounded-md bg-info/10 text-info hover:bg-info/20 transition-colors"
                           title="Editar docente"
                           onClick={() => onEdit && onEdit(docente)}
                         >
                           <Pencil size={15} />
                         </button>
-                        <button 
+                        <button
                           className="p-1.5 rounded-md bg-error/10 text-error hover:bg-error/20 transition-colors"
                           title="Eliminar docente"
                           onClick={() => onDelete && onDelete(docente.id, docente.nombre)}
                         >
                           <Trash2 size={15} />
                         </button>
-                        
+
                         {/* Componente AgregarRestriccionModal */}
                         <div className="w-8 h-8 flex items-center justify-center">
                           <AgregarRestriccionModal

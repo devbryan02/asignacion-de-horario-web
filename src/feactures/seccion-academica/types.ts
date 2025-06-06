@@ -9,4 +9,6 @@ export type SeccionResponse = {
     id: UUID,
     nombre: string,
     periodoAcademico: string,
+    fechaInicio: string,
+    fechaFin: string,
 }

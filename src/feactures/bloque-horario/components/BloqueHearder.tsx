@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { PlusCircle, Clock, Calendar } from 'lucide-react';
 import AgregarBloqueModal from './AgregarBloqueModal';
+import { useBloques } from '../hooks/useBloques';
+import { on } from 'events';
 
-function BloqueHeader() {
+type bloqueHeaderProps = {
+    onAddBloque?: () => void;
+};
+
+function BloqueHeader({onAddBloque}:bloqueHeaderProps) {
     const [modalOpen, setModalOpen] = useState(false);
 
     return (
@@ -42,6 +48,7 @@ function BloqueHeader() {
             <AgregarBloqueModal 
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
+                onBloqueAdded={onAddBloque}
             />
         </>
     );

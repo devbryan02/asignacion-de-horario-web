@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PlusCircle, Clock, AlertCircle, X, Calendar, Clock3, Shield, Loader2 } from "lucide-react";
+import { Clock, AlertCircle, X, Calendar, Clock3, Shield, Loader2 } from "lucide-react";
 import { createRestriccionDocente } from "../DocenteService";
 import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { DiaSemana } from "@/types/DiaSemana";
 import { TipoRestriccion } from "@/types/TipoRestriccion";
 import toast from "react-hot-toast";
 import { UUID } from "crypto";
-import { useRouter } from 'next/navigation';
 
 interface AgregarRestriccionModalProps {
     docenteId: UUID;

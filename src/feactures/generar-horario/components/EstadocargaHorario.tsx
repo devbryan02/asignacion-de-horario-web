@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { Calendar, Check, BarChart4, Users, School, Zap, Gauge, Sparkles } from 'lucide-react';
+import { Calendar, Check, BarChart4, Users, School, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function EstadoCargaHorario() {
@@ -9,24 +8,24 @@ export default function EstadoCargaHorario() {
   // Elementos que se animan secuencialmente
   const steps = [
     {
-      icon: <BarChart4 size={18} className="text-primary" />,
-      text: "Analizando todas las restricciones y preferencias",
+      icon: <BarChart4 size={16} className="text-primary" />,
+      text: "Analizando restricciones y preferencias",
     },
     {
-      icon: <Calendar size={18} className="text-primary" />,
-      text: "Optimizando la distribución de aulas y horarios",
+      icon: <Calendar size={16} className="text-primary" />,
+      text: "Optimizando distribución de horarios",
     },
     {
-      icon: <Users size={18} className="text-primary" />,
-      text: "Evitando conflictos de docentes y espacios",
+      icon: <Users size={16} className="text-primary" />,
+      text: "Evitando conflictos de docentes y aulas",
     },
     {
-      icon: <School size={18} className="text-primary" />,
-      text: "Aplicando las reglas de prioridad institucionales",
+      icon: <School size={16} className="text-primary" />,
+      text: "Aplicando reglas institucionales",
     },
   ];
 
-  // Simular progreso y activación secuencial de pasos - ajustado para 10 segundos total
+  // Simular progreso y activación secuencial de pasos
   useEffect(() => {
     const totalDuration = 60000; // 60 segundos
     const interval = 100; // Actualizar cada 100ms
@@ -45,9 +44,9 @@ export default function EstadoCargaHorario() {
 
     // Activar pasos en tiempos específicos
     const stepTimers = [
-      setTimeout(() => setActiveStepIndex(1), totalDuration * 0.25), // 25% del tiempo
-      setTimeout(() => setActiveStepIndex(2), totalDuration * 0.5),  // 50% del tiempo
-      setTimeout(() => setActiveStepIndex(3), totalDuration * 0.75)  // 75% del tiempo
+      setTimeout(() => setActiveStepIndex(1), totalDuration * 0.25),
+      setTimeout(() => setActiveStepIndex(2), totalDuration * 0.5),
+      setTimeout(() => setActiveStepIndex(3), totalDuration * 0.75)
     ];
 
     return () => {
@@ -56,151 +55,85 @@ export default function EstadoCargaHorario() {
     };
   }, []);
 
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center py-8 relative"
-    >
-      {/* Círculo de carga estilo moderno */}
-      <div className="relative mb-8">
-        {/* Fondo del spinner */}
-        <div className="w-24 h-24 rounded-full border-4 border-base-200 relative flex items-center justify-center">
-          {/* Arco de progreso animado */}
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-            <circle
-              className="text-base-200 stroke-current"
-              strokeWidth="4"
-              fill="transparent"
-              r="42"
-              cx="50"
-              cy="50"
-            />
-            <circle
-              className="text-primary stroke-current progress-circle"
-              strokeWidth="4"
-              strokeLinecap="round"
-              fill="transparent"
-              r="42"
-              cx="50"
-              cy="50"
-              style={{
-                strokeDasharray: 264,
-                strokeDashoffset: 264 - (progress / 100) * 264,
-                transition: "stroke-dashoffset 0.3s"
-              }}
-            />
-          </svg>
-
-          {/* Icono central */}
-          <div className="w-16 h-16 rounded-full bg-base-100 flex items-center justify-center z-10 border border-base-200 shadow-inner">
-            <Calendar size={24} className="text-primary" />
+    <div className="flex flex-col items-center justify-center py-6">
+      {/* Círculo de carga con DaisyUI */}
+      <div className="mb-6">
+        <div className="relative">
+          {/* Radial progress de DaisyUI */}
+          <div 
+            className="radial-progress text-primary" 
+            style={{ "--value": Math.round(progress), "--size": "8rem", "--thickness": "4px" } as React.CSSProperties}
+          >
+            {/* Contenedor del icono central */}
+            <div className="bg-base-100 rounded-full p-4 flex items-center justify-center border border-base-200">
+              <Calendar size={24} className="text-primary" />
+            </div>
           </div>
+          
+          {/* Indicador pulsante */}
+          <span className="absolute top-0 right-0 badge badge-primary badge-sm animate-pulse">
+            <Zap size={10} />
+          </span>
         </div>
       </div>
 
       {/* Título y texto explicativo */}
-      <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-base-content mb-2">
+      <div className="text-center mb-5">
+        <h3 className="text-lg font-bold mb-1">
           Generando horario optimizado
         </h3>
-
-        <div className="flex items-center justify-center gap-2 text-primary mb-4">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.8, 1, 0.8],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-          >
-            <Zap size={16} />
-          </motion.div>
-          <span className="text-sm font-medium">OptaPlanner en ejecución</span>
+        <div className="badge badge-primary badge-outline gap-1">
+          <Zap size={12} />
+          <span className="text-xs">OptaPlanner</span>
         </div>
       </div>
 
-      {/* Pasos de progreso con indicadores */}
-      <div className="w-full max-w-md px-4 mb-6">
-        <div className="bg-base-100 shadow border border-base-200 rounded-lg">
-          <div className="p-4 border-b border-base-200">
-            <h4 className="font-medium text-base-content">Progreso del algoritmo</h4>
-          </div>
-
-          <div className="py-3 px-4">
-            <ol className="relative">
+      {/* Pasos de progreso con timeline de DaisyUI */}
+      <div className="max-w-sm w-full px-4 mb-5">
+        <div className="card bg-base-100 shadow-sm compact">
+          <div className="card-body p-0">
+            <div className="p-3 border-b border-base-200">
+              <h4 className="card-title text-sm">Progreso del algoritmo</h4>
+            </div>
+            <ul className="steps steps-vertical py-2 px-4">
               {steps.map((step, index) => (
-                <li
+                <li 
                   key={index}
-                  className={`flex relative pb-4 ${index === steps.length - 1 ? "" : "border-l border-base-200 ml-3 last:border-0"
-                    }`}
+                  data-content={index < activeStepIndex ? "✓" : (index + 1)}
+                  className={`step ${index <= activeStepIndex ? "step-primary" : ""}`}
                 >
-                  <div className={`absolute -left-3 mt-1.5 w-6 h-6 rounded-full flex items-center justify-center z-10 
-                    ${index < activeStepIndex
-                      ? "bg-success text-white"
-                      : index === activeStepIndex
-                        ? "bg-primary text-white"
-                        : "bg-base-200 text-base-content/50"}`}
-                  >
-                    {index < activeStepIndex ? (
-                      <Check size={14} />
-                    ) : (
-                      <span className="text-xs">{index + 1}</span>
+                  <div className="flex items-center">
+                    {step.icon}
+                    <span className="ml-2 text-xs">
+                      {step.text}
+                    </span>
+                    {index === activeStepIndex && (
+                      <span className="ml-2 w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
                     )}
-                  </div>
-
-                  <div className={`pl-8 ${index === activeStepIndex ? "" : "opacity-60"
-                    }`}>
-                    <div className={`flex items-center mb-1 ${index === activeStepIndex ? "text-primary font-medium" : ""
-                      }`}>
-                      {step.icon}
-                      <span className="ml-2 text-sm">
-                        {step.text}
-                      </span>
-
-                      {index === activeStepIndex && (
-                        <motion.div
-                          className="ml-2 w-1.5 h-1.5 rounded-full bg-primary"
-                          animate={{
-                            opacity: [0, 1, 0]
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      )}
-                    </div>
                   </div>
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
         </div>
       </div>
 
       {/* Barra de progreso y porcentaje */}
-      <div className="w-full max-w-md px-4 mb-2">
-        <div className="flex justify-between items-center mb-1">
-          <span className="text-xs text-base-content/60">Progreso</span>
-          <span className="text-xs font-medium">{Math.round(progress)}%</span>
+      <div className="w-full max-w-sm px-4">
+        <div className="flex justify-between items-center mb-1 text-xs">
+          <span className="text-base-content/60">Progreso</span>
+          <span className="font-medium">{Math.round(progress)}%</span>
         </div>
-        <div className="h-1.5 w-full bg-base-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-primary rounded-full"
-            style={{ width: `${progress}%` }}
-          />
+        <progress 
+          className="progress progress-primary w-full h-1" 
+          value={progress} 
+          max="100"
+        ></progress>
+        <div className="text-xs text-center text-base-content/60 mt-2">
+          Este proceso puede tardar unos minutos
         </div>
       </div>
-      <div className="text-xs text-base-content/60 mt-2">
-        Este proceso puede tardar unos minutos, por favor espera...
-      </div>
-
-    </motion.div>
+    </div>
   );
 }

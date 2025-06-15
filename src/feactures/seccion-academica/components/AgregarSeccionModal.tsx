@@ -25,8 +25,6 @@ export default function AgregarSeccionModal({ isOpen, onClose, onCreateSeccion }
   const [loadingPeriodos, setLoadingPeriodos] = useState(false);
   const [errorMensaje, setErrorMensaje] = useState<string | null>(null);
   
-  // Refs para animación y focus
-  const modalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
   // Cargar periodos cuando se abre el modal
@@ -53,15 +51,6 @@ export default function AgregarSeccionModal({ isOpen, onClose, onCreateSeccion }
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
-    }
-  }, [isOpen]);
-  
-  // Efecto para animar entrada del modal
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      modalRef.current.classList.add('animate-in');
-      modalRef.current.classList.add('fade-in');
-      modalRef.current.classList.add('duration-300');
     }
   }, [isOpen]);
 
@@ -107,136 +96,129 @@ export default function AgregarSeccionModal({ isOpen, onClose, onCreateSeccion }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-base-content/45 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div 
-        ref={modalRef} 
-        className="bg-base-100 rounded-lg shadow-xl w-full max-w-md border border-base-300"
-      >
-        {/* Modal Header con gradiente y icono */}
-        <div className="bg-gradient-to-r from-primary/20 to-primary/5 rounded-t-lg p-4 flex justify-between items-center border-b border-base-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
-              <BookOpen size={18} />
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="card bg-base-100 w-full max-w-md shadow-xl animate-in fade-in zoom-in duration-200">
+        {/* Header */}
+        <div className="card-body p-0">
+          <div className="relative bg-gradient-to-r from-primary/10 to-transparent p-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-primary/15 p-3 rounded-full text-primary">
+                <BookOpen size={20} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Nueva Sección</h3>
+                <p className="text-sm text-base-content/70">
+                  Complete la información para crear una sección
+                </p>
+              </div>
             </div>
-            <h3 className="text-lg font-semibold text-base-content">Nueva Sección Académica</h3>
-          </div>
-          <button 
-            onClick={onClose} 
-            className="btn btn-sm btn-ghost btn-circle"
-            aria-label="Cerrar"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="p-6">
-          {/* Mensaje instructivo */}
-          <p className="text-sm text-base-content/70 mb-6">
-            Complete los campos para crear una nueva sección académica. Todos los campos son obligatorios.
-          </p>
-        
-          {/* Campo de Nombre con icono */}
-          <div className="form-control mb-5">
-            <label className="label">
-              <span className="label-text font-medium">Nombre de la Sección</span>
-            </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-3 flex items-center">
-                <BookOpen size={16} className="text-base-content/50" />
-              </span>
-              <input
-                ref={inputRef}
-                type="text"
-                id="nombre"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                placeholder="Ej: Sección A"
-                className="input input-bordered w-full pl-10"
-                disabled={isLoading}
-              />
-            </div>
-            <label className="label">
-              <span className="label-text-alt text-base-content/50">Ingrese un nombre descriptivo y único</span>
-            </label>
+            
+            {/* Close button */}
+            <button 
+              onClick={onClose}
+              className="btn btn-sm btn-circle absolute right-4 top-4"
+            >
+              <X size={18} />
+            </button>
           </div>
           
-          {/* Campo de Periodo Académico con icono */}
-          <div className="form-control mb-5">
-            <label className="label">
-              <span className="label-text font-medium">Periodo Académico</span>
-            </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-3 flex items-center">
-                <Calendar size={16} className="text-base-content/50" />
-              </span>
-              <select
-                id="periodoAcademicoId"
-                name="periodoAcademicoId"
-                value={formData.periodoAcademicoId}
-                onChange={handleInputChange}
-                className="select select-bordered w-full pl-10 appearance-none"
-                disabled={isLoading || loadingPeriodos}
-              >
-                <option value="">Seleccionar periodo académico</option>
-                {periodos.map((periodo) => (
-                  <option key={periodo.id} value={periodo.id}>
-                    {periodo.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {loadingPeriodos ? (
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            {/* Campo de Nombre */}
+            <div className="form-control">
               <label className="label">
-                <span className="label-text-alt flex items-center gap-1 text-base-content/50">
-                  <span className="loading loading-spinner loading-xs"></span>
-                  Cargando periodos académicos...
+                <span className="label-text font-medium">Nombre de la Sección</span>
+              </label>
+              <div className="relative">
+                <BookOpen size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleInputChange}
+                  placeholder="Ej: Sección A"
+                  className="input input-bordered w-full pl-10 bg-base-100 focus:ring-2 focus:ring-primary/30 transition-all"
+                  disabled={isLoading}
+                />
+              </div>
+              <label className="label">
+                <span className="label-text-alt text-base-content/60">Ingrese un nombre descriptivo</span>
+              </label>
+            </div>
+            
+            {/* Campo de Periodo Académico */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Periodo Académico</span>
+              </label>
+              <div className="relative">
+                <Calendar size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
+                <select
+                  name="periodoAcademicoId"
+                  value={formData.periodoAcademicoId}
+                  onChange={handleInputChange}
+                  className="select select-bordered w-full pl-10 bg-base-100 focus:ring-2 focus:ring-primary/30 transition-all"
+                  disabled={isLoading || loadingPeriodos}
+                >
+                  <option value="">Seleccionar periodo</option>
+                  {periodos.map((periodo) => (
+                    <option key={periodo.id} value={periodo.id}>
+                      {periodo.nombre}
+                    </option>
+                  ))}
+                </select>
+                {loadingPeriodos && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <span className="loading loading-spinner loading-xs text-primary"></span>
+                  </div>
+                )}
+              </div>
+              <label className="label">
+                <span className="label-text-alt text-base-content/60">
+                  {loadingPeriodos ? "Cargando periodos..." : "Seleccione el periodo académico"}
                 </span>
               </label>
-            ) : (
-              <label className="label">
-                <span className="label-text-alt text-base-content/50">Seleccione el periodo académico al que pertenece esta sección</span>
-              </label>
-            )}
-          </div>
-          
-          {/* Mensaje de error mejorado */}
-          {errorMensaje && (
-            <div className="bg-error/10 text-error rounded-lg px-4 py-3 mb-6 flex items-start gap-3">
-              <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
-              <span className="text-sm">{errorMensaje}</span>
             </div>
-          )}
           
-          {/* Botones de acción con mejor UX */}
-          <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-base-200">
+            {/* Mensaje de error */}
+            {errorMensaje && (
+              <div className="alert alert-error shadow-sm text-sm">
+                <AlertCircle size={16} />
+                <span>{errorMensaje}</span>
+              </div>
+            )}
+          </form>
+          
+          {/* Footer */}
+          <div className="card-actions justify-end p-4 bg-base-200/30">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-outline"
+              className="btn btn-ghost btn-sm"
               disabled={isLoading}
             >
               Cancelar
             </button>
             <button
-              type="submit"
-              className="btn btn-primary"
+              onClick={handleSubmit}
+              className="btn btn-primary btn-sm"
               disabled={isLoading || loadingPeriodos}
             >
               {isLoading ? (
                 <>
-                  <span className="loading loading-spinner loading-sm"></span>
-                  Guardando...
+                  <span className="loading loading-spinner loading-xs"></span>
+                  Guardando
                 </>
               ) : (
                 <>
-                  <Check size={16} />
+                  <Check size={14} />
                   Guardar Sección
                 </>
               )}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

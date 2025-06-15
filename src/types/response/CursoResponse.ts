@@ -5,5 +5,5 @@ export type CursoResponse = {
     nombre: string,
     horasSemanales: number,
     tipo: string,
-    unidadAcademica: string,
+    unidadesAcademicasCount: number,
 }

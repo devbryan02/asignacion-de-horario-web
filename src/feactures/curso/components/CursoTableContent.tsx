@@ -92,7 +92,7 @@ export default function CursoTableContent({
                   <span className="text-xs text-base-content/60">hrs/sem</span>
                 </div>
               </td>
-              <td>{curso.unidadAcademica || "No asignada"}</td>
+              <td> Asig. a {curso.unidadesAcademicasCount || "No asignada"} unidades</td>
               <td className="text-right">
                 <div className="flex justify-end gap-2">
                   <button

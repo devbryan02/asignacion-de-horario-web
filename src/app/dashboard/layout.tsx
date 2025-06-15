@@ -2,10 +2,7 @@
 
 import React, { useState } from "react";
 import {
-  School,
-  Users,
   CalendarClock,
-  Layers,
   Clock4,
   Settings,
   LayoutDashboard,
@@ -30,7 +27,7 @@ const menuGroups = [
     items: [
       { href: "/dashboard", icon: <LayoutDashboard size={16} />, label: "Dashboard" },
       { href: "/dashboard/periodo-academico", icon: <CalendarRange size={16} />, label: "Periodos" },
-      { href: "/dashboard/unidades-academicas", icon: <CalendarRange size={16} />, label: "Unidades" },
+      { href: "/dashboard/unidades-academicas", icon: <Building2 size={16} />, label: "Unidades" },
     ]
   },
   {

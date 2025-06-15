@@ -80,6 +80,7 @@ export const deleteCurso = async (id: UUID): Promise<ApiErrorDelete> => {
 export interface CursoSeccionBulkRequest {
   cursoId: UUID;
   seccionesIds: UUID[];
+  docenteId: UUID;
   modo: string
 }
 
@@ -92,9 +93,9 @@ export interface RegistroResponse {
 
 // Método para registrar secciones en bulk
 // Método para registrar secciones en bulk - CORREGIDO
-export const addSeccionesBulk = async (request: CursoSeccionBulkRequest): Promise<RegistroResponse> => {
+export const addSeccionesAndDocentesBulk = async (request: CursoSeccionBulkRequest): Promise<RegistroResponse> => {
   try {
-    const response = await apiClient.post<RegistroResponse>("/curso-seccion/bulk", request);
+    const response = await apiClient.post<RegistroResponse>("/curso-seccion-docente/bulk", request);
     return response.data;
   } catch (error) {
     console.error("Error registrando secciones en bulk:", error);

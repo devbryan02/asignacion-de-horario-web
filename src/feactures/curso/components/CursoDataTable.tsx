@@ -10,6 +10,8 @@ import CursoPagination from "./CursoPagination";
 import { CursoResponse } from "@/types/response/CursoResponse";
 import { SeccionResponse } from "@/feactures/seccion-academica/types";
 import { fetchSeccionAcademica } from "@/feactures/seccion-academica/SeccionAcademicaService";
+import { fetchDocentes } from "@/feactures/docente/DocenteService"; // Importar función para cargar docentes
+import { DocenteResponse } from "@/types/response/DocenteResponse";
 import { UUID } from "crypto";
 import { RegistroResponse } from "../CursoService";
 
@@ -37,6 +39,7 @@ export default function CursoDataTable() {
   const [seccionesModalOpen, setSeccionesModalOpen] = useState(false);
   const [cursoParaSecciones, setCursoParaSecciones] = useState<CursoResponse | null>(null);
   const [secciones, setSecciones] = useState<SeccionResponse[]>([]);
+  const [docentes, setDocentes] = useState<DocenteResponse[]>([]); // Nuevo estado para docentes
   const [loadingSecciones, setLoadingSecciones] = useState(false);
 
   // Estado para paginación
@@ -57,22 +60,28 @@ export default function CursoDataTable() {
     setCurrentPage(1);
   }, [searchQuery, filterTipo]);
 
-  // Cargar secciones cuando se abre el modal de asignación
+  // Cargar secciones y docentes cuando se abre el modal de asignación
   useEffect(() => {
     if (seccionesModalOpen) {
-      const loadSecciones = async () => {
+      const loadData = async () => {
         try {
           setLoadingSecciones(true);
-          const data = await fetchSeccionAcademica();
-          setSecciones(data);
+          // Cargar datos en paralelo
+          const [seccionesData, docentesData] = await Promise.all([
+            fetchSeccionAcademica(),
+            fetchDocentes() // Asegúrate de tener esta función en tu servicio de docentes
+          ]);
+          
+          setSecciones(seccionesData);
+          setDocentes(docentesData);
         } catch (error) {
-          console.error("Error cargando secciones:", error);
+          console.error("Error cargando datos para asignación:", error);
         } finally {
           setLoadingSecciones(false);
         }
       };
 
-      loadSecciones();
+      loadData();
     }
   }, [seccionesModalOpen]);
 
@@ -91,11 +100,16 @@ export default function CursoDataTable() {
     }
   };
 
-  // Realizar la asignación de secciones
-  const handleAsignarSecciones2 = async (cursoId: UUID, seccionIds: UUID[]): Promise<RegistroResponse> => {
+  // Realizar la asignación de secciones y docentes
+  const handleAsignarSecciones2 = async (
+    cursoId: UUID, 
+    seccionIds: UUID[],
+    docentId: UUID | null, 
+    modo: string
+  ): Promise<RegistroResponse> => {
     try {
-      // Llamar directamente al método del hook
-      const result = await handleAsignarSeccionesBulk(cursoId, seccionIds);
+      // Llamar directamente al método del hook con secciones y docentes
+      const result = await handleAsignarSeccionesBulk(cursoId, seccionIds, docentId, modo);
 
       // El modal se cerrará automáticamente solo en caso de éxito
       if (result.success) {
@@ -106,16 +120,15 @@ export default function CursoDataTable() {
       // Siempre devolvemos el resultado tal cual viene del hook
       return result;
     } catch (error) {
-      console.error("Error inesperado al asignar secciones:", error);
+      console.error("Error inesperado al asignar:", error);
 
       // En caso de error no controlado, devolver un objeto de error
       return {
         success: false,
-        message: error instanceof Error ? error.message : "Error inesperado al asignar secciones"
+        message: error instanceof Error ? error.message : "Error inesperado al asignar secciones y docentes"
       };
     }
   };
-
 
   return (
     <div className="container mx-auto bg-base-100 p-1 rounded-lg shadow-sm">
@@ -176,6 +189,7 @@ export default function CursoDataTable() {
           cursoNombre={cursoParaSecciones.nombre}
           onAsignar={handleAsignarSecciones2}
           secciones={secciones}
+          docentes={docentes}
           isLoading={loadingSecciones}
         />
       )}

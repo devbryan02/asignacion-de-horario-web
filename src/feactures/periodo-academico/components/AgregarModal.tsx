@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Calendar, Loader2, X } from "lucide-react";
+import { Calendar, X, Check } from "lucide-react";
 import { usePeriodoAcademico } from "../hooks/usePeriodo";
 import { toast } from "react-hot-toast";
 
@@ -29,13 +29,19 @@ export const AgregarPeriodoAcademicoModal: React.FC<AgregarPeriodoAcademicoModal
   onClose 
 }) => {
   const { createPeriodo } = usePeriodoAcademico();
+  
   const { 
     register, 
     handleSubmit, 
-    formState: { errors }, 
+    formState: { errors, isSubmitting }, 
     reset 
   } = useForm({
-    resolver: zodResolver(periodoSchema)
+    resolver: zodResolver(periodoSchema),
+    defaultValues: {
+      nombre: "",
+      fechaInicio: new Date().toISOString().split('T')[0],
+      fechaFin: new Date(new Date().setMonth(new Date().getMonth() + 4)).toISOString().split('T')[0]
+    }
   });
 
   const onSubmit = async (data: z.infer<typeof periodoSchema>) => {
@@ -62,87 +68,103 @@ export const AgregarPeriodoAcademicoModal: React.FC<AgregarPeriodoAcademicoModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/45 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
-        {/* Modal header */}
-        <div className="px-6 pt-5 pb-4 border-b border-base-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center text-primary border border-primary/20">
-              <Calendar size={20} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="bg-base-100 w-full max-w-lg rounded-lg shadow-xl animate-in fade-in zoom-in duration-200">
+        {/* Header */}
+        <div className="p-6 bg-gradient-to-r from-primary/10 to-transparent relative">
+          <div className="flex items-center gap-4">
+            <div className="bg-primary/15 text-primary p-3 rounded-full">
+              <Calendar size={24} />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-base-content">Agregar Nuevo Periodo Académico</h3>
-              <p className="text-sm mt-1 text-base-content/70">
-                Complete la información del nuevo periodo
+              <h3 className="text-xl font-bold">Nuevo Periodo Académico</h3>
+              <p className="text-sm text-base-content/70">
+                Configure los datos del nuevo periodo
               </p>
             </div>
           </div>
+          
+          {/* Close button */}
+          <button 
+            className="btn btn-sm btn-circle absolute right-4 top-4"
+            onClick={() => {
+              reset();
+              onClose();
+            }}
+          >
+            <X size={18} />
+          </button>
         </div>
         
         {/* Form content */}
-        <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="space-y-1.5 md:col-span-2">
-              <label className="text-sm font-medium text-base-content">
-                Nombre del Periodo
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-medium">Nombre del Periodo</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Ej: 2024-1"
+              className={`input input-bordered w-full ${errors.nombre ? 'input-error' : ''}`}
+              {...register("nombre")}
+            />
+            {errors.nombre && (
+              <label className="label">
+                <span className="label-text-alt text-error">{errors.nombre.message}</span>
               </label>
-              <input
-                type="text"
-                placeholder="Ej: 2024-1"
-                className={`w-full h-10 px-3 rounded-md border ${
-                  errors.nombre 
-                    ? 'border-error text-error' 
-                    : 'border-base-300 focus:ring-primary/30 focus:border-primary'
-                } bg-base-100 focus:outline-none focus:ring-2 transition-all`}
-                {...register("nombre")}
-              />
-              {errors.nombre && (
-                <p className="text-error text-xs mt-1">{errors.nombre.message}</p>
-              )}
-            </div>
+            )}
+          </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-base-content">
-                Fecha de Inicio
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Fecha de Inicio</span>
               </label>
-              <input
-                type="date"
-                className={`w-full h-10 px-3 rounded-md border ${
-                  errors.fechaInicio 
-                    ? 'border-error text-error' 
-                    : 'border-base-300 focus:ring-primary/30 focus:border-primary'
-                } bg-base-100 focus:outline-none focus:ring-2 transition-all`}
-                {...register("fechaInicio")}
-              />
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                  <Calendar size={16} />
+                </div>
+                <input
+                  type="date"
+                  className={`input input-bordered w-full pl-10 ${errors.fechaInicio ? 'input-error' : ''}`}
+                  {...register("fechaInicio")}
+                />
+              </div>
               {errors.fechaInicio && (
-                <p className="text-error text-xs mt-1">{errors.fechaInicio.message}</p>
+                <label className="label">
+                  <span className="label-text-alt text-error">{errors.fechaInicio.message}</span>
+                </label>
               )}
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-base-content">
-                Fecha de Fin
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">Fecha de Fin</span>
               </label>
-              <input
-                type="date"
-                className={`w-full h-10 px-3 rounded-md border ${
-                  errors.fechaFin 
-                    ? 'border-error text-error' 
-                    : 'border-base-300 focus:ring-primary/30 focus:border-primary'
-                } bg-base-100 focus:outline-none focus:ring-2 transition-all`}
-                {...register("fechaFin")}
-              />
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                  <Calendar size={16} />
+                </div>
+                <input
+                  type="date"
+                  className={`input input-bordered w-full pl-10 ${errors.fechaFin ? 'input-error' : ''}`}
+                  {...register("fechaFin")}
+                />
+              </div>
               {errors.fechaFin && (
-                <p className="text-error text-xs mt-1">{errors.fechaFin.message}</p>
+                <label className="label">
+                  <span className="label-text-alt text-error">{errors.fechaFin.message}</span>
+                </label>
               )}
             </div>
           </div>
         </form>
         
         {/* Modal footer */}
-        <div className="px-6 py-4 bg-base-200/50 border-t border-base-200 flex justify-end gap-3">
+        <div className="bg-base-200/30 p-4 flex justify-end gap-3 rounded-b-lg">
           <button 
-            className="px-4 py-2 rounded-md text-sm font-medium text-base-content/70 hover:bg-base-300 hover:text-base-content transition-colors" 
+            type="button"
+            className="btn btn-ghost"
             onClick={() => {
               reset();
               onClose();
@@ -151,24 +173,19 @@ export const AgregarPeriodoAcademicoModal: React.FC<AgregarPeriodoAcademicoModal
             Cancelar
           </button>
           <button 
-            className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-content hover:bg-primary-focus transition-colors flex items-center gap-2"
+            type="button"
+            className="btn btn-primary"
             onClick={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
           >
-            Guardar Periodo
+            {isSubmitting ? (
+              <span className="loading loading-spinner loading-xs"></span>
+            ) : (
+              <Check size={16} className="mr-1" />
+            )}
+            Guardar
           </button>
         </div>
-
-        {/* Close button */}
-        <button 
-          className="absolute right-4 top-4 w-8 h-8 rounded-full flex items-center justify-center text-base-content/60 hover:bg-base-200 hover:text-base-content transition-colors"
-          onClick={() => {
-            reset();
-            onClose();
-          }}
-          aria-label="Cerrar"
-        >
-          <X size={18} />
-        </button>
       </div>
     </div>
   );

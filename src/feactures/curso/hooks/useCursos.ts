@@ -6,7 +6,7 @@ import {
   createCurso,
   updateCurso,
   deleteCurso,
-  addSeccionesBulk,
+  addSeccionesAndDocentesBulk as addSeccionesBulkService,
   CursoSeccionBulkRequest,
   RegistroResponse,
   ApiErrorDelete
@@ -58,9 +58,7 @@ export function useCursos() {
     return cursos.filter(curso => {
       // Filtro por búsqueda
       const matchesSearch = searchQuery === "" ||
-        curso.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (curso.unidadAcademica &&
-          curso.unidadAcademica.toLowerCase().includes(searchQuery.toLowerCase()));
+        curso.nombre.toLowerCase().includes(searchQuery.toLowerCase()) 
 
       // Filtro por tipo
       const matchesTipo = (!filterTipo.teorico && !filterTipo.laboratorio) ||
@@ -159,47 +157,45 @@ export function useCursos() {
     }
   };
 
-  const handleAsignarSeccionesBulk = async (
-    cursoId: UUID,
-    seccionIds: UUID[]
-  ): Promise<RegistroResponse> => {
-    try {
-      setIsLoading(true);
-
-      const request: CursoSeccionBulkRequest = {
-        cursoId,
-        seccionesIds: seccionIds,
-        modo: "PRESENCIAL", // O el modo que esté definido en tu API
-      };
-
-      // Llamamos al servicio y esperamos un RegistroResponse
-      const response = await addSeccionesBulk(request);
-      // Si la operación fue exitosa según la respuesta de la API
-      if (response.success) {
-        return {
-          success: true,
-          message: response.message || `Se asignaron correctamente ${seccionIds.length} secciones.`
-        };
-      }
-
-      // Si la API indica que hubo un error
+  // Parte del useCursos hook que maneja la asignación de secciones y docentes
+const handleAsignarSeccionesBulk = async (
+  cursoId: UUID, 
+  seccionesIds: UUID[], 
+  docenteId: UUID | null,
+  modo: string
+): Promise<RegistroResponse> => {
+  try {
+    // Solo enviar la solicitud si hay secciones seleccionadas
+    if (seccionesIds.length === 0) {
       return {
         success: false,
-        message: response.message || "No se pudieron asignar las secciones."
+        message: "Debes seleccionar al menos una sección"
       };
-
-    } catch (error) {
-      console.error("Error inesperado al asignar secciones:", error);
-
-      // Manejo de errores no controlados
-      return {
-        success: false,
-        message: "Ocurrió un error inesperado al asignar las secciones."
-      };
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    const request: CursoSeccionBulkRequest = {
+      cursoId,
+      seccionesIds,
+      docenteId: docenteId || null as any, // Si no se seleccionó un docente, enviamos null
+      modo: modo || "ASIGNAR" // ASIGNAR o DESASIGNAR
+    };
+
+    const result = await addSeccionesBulkService(request);
+    
+    if (result.success) {
+      // Actualizar el estado si fue exitoso
+      await fetchCursos();
+    }
+    
+    return result;
+  } catch (error) {
+    console.error("Error en la asignación de secciones:", error);
+    return {
+      success: false,
+      message: "Error al procesar la asignación de secciones"
+    };
+  }
+};
 
 
   // Cambiar filtro de tipo

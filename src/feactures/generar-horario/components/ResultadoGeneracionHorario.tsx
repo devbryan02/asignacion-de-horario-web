@@ -10,7 +10,6 @@ import {
   Building2, 
   Share2
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 interface ResultadoGeneracionHorarioProps {
@@ -65,15 +64,11 @@ export default function ResultadoGeneracionHorario({
   const calidadConfig = getCalidadConfig();
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+    <div 
       className="mt-8"
     >
       {/* Banner de éxito */}
-      <motion.div 
-        variants={itemVariants} 
+      <div 
         className="rounded-xl border-2 border-success/30 bg-gradient-to-r from-success/20 to-success/5 p-5 mb-8 shadow-sm"
       >
         <div className="flex items-center gap-4">
@@ -95,19 +90,17 @@ export default function ResultadoGeneracionHorario({
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
       
-      <motion.h3 
-        variants={itemVariants}
+      <h3 
         className="text-lg font-semibold mb-4 flex items-center gap-2"
       >
         <Grid size={18} className="text-primary" />
         <span>Resumen de Indicadores Generados</span>
-      </motion.h3>
+      </h3>
       
       {/* Tarjetas de estadísticas */}
-      <motion.div 
-        variants={itemVariants}
+      <div 
         className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"
       >
         <div className="stats bg-base-100 shadow-md border border-base-200">
@@ -153,11 +146,10 @@ export default function ResultadoGeneracionHorario({
             <div className="stat-desc">Docentes con clases asignadas</div>
           </div>
         </div>
-      </motion.div>
+      </div>
       
       {/* Tarjeta informativa */}
-      <motion.div 
-        variants={itemVariants}
+      <div 
         className="bg-gradient-to-r from-base-200 to-base-100 rounded-xl p-5 shadow-sm border border-base-300 mb-8"
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -179,11 +171,10 @@ export default function ResultadoGeneracionHorario({
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
       
       {/* Botones de acción */}
-      <motion.div 
-        variants={itemVariants}
+      <div 
         className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8"
       >
         <Link 
@@ -201,16 +192,15 @@ export default function ResultadoGeneracionHorario({
           <RefreshCw size={20} />
           <span>Generar Nuevo Horario</span>
         </button>
-      </motion.div>
+      </div>
       
       {/* Footer con información adicional */}
-      <motion.div 
-        variants={itemVariants}
+      <div 
         className="text-center text-xs text-base-content/50 mt-8 pt-4 border-t border-base-200"
       >
         <p>Horario generado el {new Date().toLocaleDateString()} a las {new Date().toLocaleTimeString()}</p>
         <p className="mt-1">El horario puede ser modificado manualmente si es necesario</p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

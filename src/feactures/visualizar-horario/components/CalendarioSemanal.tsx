@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useHorario } from '../hooks/useHorario';
 import { HorarioModal } from './HorarioModal';
 import {MapPin, User} from "lucide-react"
@@ -140,7 +139,7 @@ export default function VistaHorarioSemanal({ modo, id }: VistaHorarioSemanalPro
                   const colorCurso = getColorCurso(franja.curso);
                   
                   return (
-                    <motion.div
+                    <div
                       key={`franja-${franja.id}`}
                       className="absolute rounded-md p-2 overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-shadow"
                       style={{
@@ -153,9 +152,6 @@ export default function VistaHorarioSemanal({ modo, id }: VistaHorarioSemanalPro
                         zIndex: 10,
                         pointerEvents: 'auto'
                       }}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
                       onClick={() => setCursoSeleccionado(franja)}
                     >
                       <div className="font-semibold text-sm mb-1 truncate" style={{ color: colorCurso }}>
@@ -172,7 +168,7 @@ export default function VistaHorarioSemanal({ modo, id }: VistaHorarioSemanalPro
                       <div className="text-[10px] text-base-content/60 absolute bottom-1 right-2">
                         {formatTime(franja.horaInicio)}-{formatTime(franja.horaFin)}
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>

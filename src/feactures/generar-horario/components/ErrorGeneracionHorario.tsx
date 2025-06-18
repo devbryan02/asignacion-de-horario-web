@@ -1,5 +1,4 @@
 import { XCircle, AlertTriangle, RefreshCw, HelpCircle, ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 interface ErrorGeneracionHorarioProps {
   mensaje: string;
@@ -13,10 +12,7 @@ export default function ErrorGeneracionHorario({
   errorCode 
 }: ErrorGeneracionHorarioProps) {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div 
       className="rounded-lg border-2 border-error/30 bg-gradient-to-r from-error/10 to-error/5 p-5 mb-6 shadow-sm"
     >
       {/* Cabecera del error */}
@@ -102,6 +98,6 @@ export default function ErrorGeneracionHorario({
           <span>Reintentar generación</span>
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

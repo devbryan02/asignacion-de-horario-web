@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, Filter, List } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface SeccionSearchBarProps {
   searchQuery: string;
@@ -54,21 +53,17 @@ export default function SeccionSearchBar({
           />
           
           {/* Botón de limpiar con animación */}
-          <AnimatePresence>
+
             {searchQuery && (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.15 }}
+              <button
+                type="button"
                 onClick={onClearSearch}
                 className="pr-3 py-2 text-base-content/50 hover:text-base-content transition-colors"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="h-4 w-4" />
-              </motion.button>
+              </button>
             )}
-          </AnimatePresence>
           
           {/* Separador vertical */}
           <div className="h-5 w-px bg-base-300 mx-1"></div>
@@ -95,15 +90,13 @@ export default function SeccionSearchBar({
           {itemCount === 0 ? (
             <span className="text-base-content/60">No se encontraron secciones</span>
           ) : (
-            <motion.span
+            <span
               key={`${startIndex}-${endIndex}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
               className="text-base-content/80"
             >
               Mostrando <span className="font-semibold text-base-content">{startIndex + 1}-{endIndex}</span> de{" "}
               <span className="font-semibold text-base-content">{itemCount}</span> secciones
-            </motion.span>
+            </span>
           )}
         </div>
       </div>

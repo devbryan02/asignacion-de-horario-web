@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, BookOpen, MapPin, User } from 'lucide-react';
 import { FranjaHoraria } from '../hooks/useHorario';
 import { formatTime, getNombreDia, calcularDuracion } from '../horarioUtlis';
@@ -22,21 +21,13 @@ export const HorarioModal: React.FC<HorarioModalProps> = ({
   const colorCurso = getColorCurso(cursoSeleccionado.curso);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+      <div
         className="fixed inset-0 bg-base-200/70 backdrop-blur-md flex items-center justify-center z-50 px-4"
         onClick={onClose}
       >
-        <motion.div
+        <div
           className="bg-base-100 rounded-lg shadow-lg border border-base-200 p-6 max-w-md w-full"
           onClick={(e) => e.stopPropagation()}
-          initial={{ scale: 0.9, y: 20, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          exit={{ scale: 0.3, y: 20, opacity: 0 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
         >
           <div className="relative">
             {/* Barra de color del curso */}
@@ -114,8 +105,7 @@ export const HorarioModal: React.FC<HorarioModalProps> = ({
               </button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </div>
   );
 };

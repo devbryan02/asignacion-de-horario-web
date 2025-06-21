@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Metadata } from "next";
 
 // Estructura de los menús organizados por grupos
 const menuGroups = [
@@ -83,6 +84,8 @@ export default function DashboardLayout({
       [groupTitle]: !prev[groupTitle]
     }));
   };
+
+
 
   return (
     <div className="flex h-screen bg-base-200 text-base-content overflow-hidden">

@@ -75,7 +75,7 @@ function AgregarBloqueModal({ isOpen, onClose, onBloqueAdded }: AgregarBloqueMod
         // Mostrar mensaje de éxito temporal 
         Swal.fire({
           toast: true,
-          position: 'top-end',
+          position: 'bottom-right',
           icon: 'success',
           title: response.message || 'Bloque horario creado',
           timer: 2000,

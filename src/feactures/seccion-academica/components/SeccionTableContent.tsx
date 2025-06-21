@@ -84,7 +84,7 @@ export default function SeccionTableContent({
                     </td>
                     <td className="py-2 px-4">
                       <div className="inline-flex items-center gap-1 p-1 px-2 bg-primary/10 text-primary rounded-lg text-xs">
-                        <Calendar size={12} />Periodo {seccion.periodoAcademico}
+                        <Calendar size={12} />{seccion.periodoAcademico}
                       </div>
                     </td>
                     <td className="py-2 px-4">

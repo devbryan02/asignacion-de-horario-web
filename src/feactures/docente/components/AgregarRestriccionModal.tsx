@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Clock, AlertCircle, X, Calendar, Clock3, Shield, Loader2 } from "lucide-react";
+import { Calendar, Clock, X, Shield, Clock3, AlertCircle, Loader2, Upload, RefreshCw } from "lucide-react";
 import { createRestriccionDocente } from "../DocenteService";
 import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { DiaSemana } from "@/types/DiaSemana";
 import { TipoRestriccion } from "@/types/TipoRestriccion";
 import toast from "react-hot-toast";
 import { UUID } from "crypto";
+import RestriccionUploader from "./RestriccionUploader";
 
 interface AgregarRestriccionModalProps {
     docenteId: UUID;
@@ -16,10 +17,13 @@ interface AgregarRestriccionModalProps {
 }
 
 function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreated }: AgregarRestriccionModalProps) {
+    // Estados principales
     const [isOpen, setIsOpen] = useState(false);
-    const [errorMensaje, setErrorMensaje] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'individual' | 'masiva'>('individual');
     const [isLoading, setIsLoading] = useState(false);
-    const [currentStep, setCurrentStep] = useState(1);
+    const [errorMensaje, setErrorMensaje] = useState<string | null>(null);
+    
+    // Estado del formulario
     const [formData, setFormData] = useState<Omit<RestriccionRequest, "docenteId">>({
         diaSemana: "LUNES",
         horaInicio: "08:00:00",
@@ -27,22 +31,21 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         tipoRestriccion: "DISPONIBLE"
     });
     
+    // Datos de referencia
     const diasSemana: DiaSemana[] = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
     const tiposRestriccion: TipoRestriccion[] = ["DISPONIBLE", "BLOQUEADO"];
-    // Modificar la generación de horas disponibles para incluir hasta las 22:00
     const horasDisponibles = Array.from({ length: 16 }, (_, i) => {
-        const hora = i + 7; // Empezar desde las 7:00 hasta 22:00 (7+15)
+        const hora = i + 7; // 7:00 hasta 22:00
         return `${hora.toString().padStart(2, '0')}:00:00`;
     });
 
+    // Manejadores de eventos
     const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // Efecto para validar horas
     useEffect(() => {
         if (formData.horaInicio >= formData.horaFin) {
             const horaInicioIndex = horasDisponibles.findIndex(h => h === formData.horaInicio);
@@ -55,10 +58,9 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         }
     }, [formData.horaInicio]);
 
-    const openModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    // Abrir/cerrar modal
+    const openModal = () => {
         setIsOpen(true);
-        setCurrentStep(1);
         if (typeof document !== "undefined") {
             document.body.style.overflow = "hidden";
         }
@@ -66,11 +68,16 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
 
     const closeModal = () => {
         setIsOpen(false);
-        setCurrentStep(1);
         setErrorMensaje(null);
+        setActiveTab('individual');
         if (typeof document !== "undefined") {
             document.body.style.overflow = "";
         }
+        resetForm();
+    };
+    
+    // Resetear formulario
+    const resetForm = () => {
         setFormData({
             diaSemana: "LUNES",
             horaInicio: "08:00:00",
@@ -79,6 +86,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         });
     };
 
+    // Enviar formulario
     const handleSubmit = async () => {
         if (formData.horaInicio >= formData.horaFin) {
             toast.error("La hora de fin debe ser posterior a la hora de inicio");
@@ -115,182 +123,15 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
         }
     };
 
+    // Formatear hora para mostrar solo HH:MM
     const formatHora = (hora: string) => hora.substring(0, 5);
-
-    const renderStepContent = () => {
-        switch (currentStep) {
-            case 1:
-                return (
-                    <div className="space-y-6">
-                        <div className="space-y-3">
-                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                                <Calendar size={16} className="text-primary" />
-                                Día de la semana
-                            </label>
-                            <div className="grid grid-cols-7 gap-1.5">
-                                {diasSemana.map(dia => (
-                                    <button
-                                        key={dia}
-                                        type="button"
-                                        className={`py-2 px-1 rounded-md border transition-colors text-sm font-medium
-                                            ${formData.diaSemana === dia
-                                                ? 'border-primary bg-primary/10 text-primary'
-                                                : 'border-base-300 hover:border-primary/40 text-base-content/80 hover:bg-base-200/70'
-                                            }`}
-                                        onClick={() => setFormData(prev => ({
-                                            ...prev,
-                                            diaSemana: dia
-                                        }))}
-                                        disabled={isLoading}
-                                    >
-                                        {dia.charAt(0)}
-                                        <span className="hidden sm:inline">
-                                            {dia.substring(1, 3).toLowerCase()}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="space-y-3 mt-6">
-                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                                <Shield size={16} className="text-primary" />
-                                Tipo de restricción
-                            </label>
-                            <div className="grid grid-cols-2 gap-3">
-                                {tiposRestriccion.map(tipo => (
-                                    <button
-                                        key={tipo}
-                                        type="button"
-                                        className={`py-3 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-2
-                                            ${formData.tipoRestriccion === tipo
-                                                ? tipo === "DISPONIBLE"
-                                                    ? 'border-success/30 bg-success/10 text-success'
-                                                    : 'border-error/30 bg-error/10 text-error'
-                                                : 'border-base-300 text-base-content/70 hover:border-base-400'
-                                            }`}
-                                        onClick={() => setFormData(prev => ({
-                                            ...prev,
-                                            tipoRestriccion: tipo
-                                        }))}
-                                        disabled={isLoading}
-                                    >
-                                        {tipo === "DISPONIBLE" ? (
-                                            <>
-                                                <span className="w-5 h-5 rounded-full bg-success/20 flex items-center justify-center text-success">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                                    </svg>
-                                                </span>
-                                                <span className="font-medium">Disponible</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span className="w-5 h-5 rounded-full bg-error/20 flex items-center justify-center text-error">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                    </svg>
-                                                </span>
-                                                <span className="font-medium">Bloqueado</span>
-                                            </>
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                );
-            case 2:
-                return (
-                    <div className="space-y-6">
-                        <div className="space-y-3">
-                            <label className="text-sm font-medium text-base-content flex items-center gap-2">
-                                <Clock3 size={16} className="text-primary" />
-                                Rango de horas
-                            </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-base-content/70">
-                                        Hora de inicio
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            className="appearance-none w-full h-10 pl-3 pr-8 rounded-md border border-base-300 bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
-                                            name="horaInicio"
-                                            value={formData.horaInicio}
-                                            onChange={handleInputChange}
-                                            disabled={isLoading}
-                                        >
-                                            {horasDisponibles.map(hora => (
-                                                <option key={`inicio-${hora}`} value={hora}>
-                                                    {formatHora(hora)}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-base-content/50">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-base-content/70">
-                                        Hora de fin
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            className="appearance-none w-full h-10 pl-3 pr-8 rounded-md border border-base-300 bg-base-100 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
-                                            name="horaFin"
-                                            value={formData.horaFin}
-                                            onChange={handleInputChange}
-                                            disabled={isLoading}
-                                        >
-                                            {horasDisponibles
-                                                .filter(hora => hora > formData.horaInicio)
-                                                .map(hora => (
-                                                    <option key={`fin-${hora}`} value={hora}>
-                                                        {formatHora(hora)}
-                                                    </option>
-                                                ))}
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-base-content/50">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={`p-4 rounded-md ${
-                            formData.tipoRestriccion === "DISPONIBLE" 
-                                ? 'bg-success/5 border border-success/20' 
-                                : 'bg-error/5 border border-error/20'
-                        }`}>
-                            <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                                <Clock size={16} className={formData.tipoRestriccion === "DISPONIBLE" ? 'text-success' : 'text-error'} />
-                                <span className={formData.tipoRestriccion === "DISPONIBLE" ? 'text-success' : 'text-error'}>
-                                    Resumen de la restricción
-                                </span>
-                            </h4>
-                            <p className="text-sm leading-relaxed text-base-content/90">
-                                Este horario quedará <span className={`font-semibold ${
-                                    formData.tipoRestriccion === "DISPONIBLE" ? "text-success" : "text-error"
-                                }`}>
-                                    {formData.tipoRestriccion === "DISPONIBLE" ? "disponible" : "bloqueado"}
-                                </span> los días <span className="font-medium">
-                                    {formData.diaSemana.charAt(0) + formData.diaSemana.slice(1).toLowerCase()}
-                                </span> de <span className="font-medium">{formatHora(formData.horaInicio)}</span> a <span className="font-medium">{formatHora(formData.horaFin)}</span>.
-                            </p>
-                        </div>
-                    </div>
-                );
-            default:
-                return null;
+    
+    // Manejar éxito de carga masiva
+    const handleUploaderSuccess = () => {
+        if (onRestriccionCreated) {
+            onRestriccionCreated();
         }
+        closeModal();
     };
 
     return (
@@ -305,119 +146,271 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
 
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/45 backdrop-blur-sm">
-                    <div className="w-full max-w-lg bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
-                        {/* Modal header */}
-                        <div className="px-6 pt-5 pb-4 border-b border-base-200">
+                    <div className="w-full max-w-2xl bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
+                        {/* Header */}
+                        <div className="px-6 py-4 border-b border-base-200">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-200">
                                     <Clock size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-base-content">Nueva Restricción Horaria</h3>
+                                    <h3 className="text-lg font-bold text-base-content">Restricciones Horarias</h3>
                                     <p className="text-sm text-base-content/70">
-                                        Para el docente <span className="font-medium text-primary">{docenteNombre}</span>
+                                        Para el docente <span className="font-medium text-amber-600">{docenteNombre}</span>
                                     </p>
                                 </div>
                             </div>
-                            
-                            {/* Progress Steps */}
-                            <div className="flex items-center justify-center gap-2 mt-5">
-                                {[1, 2].map((step) => (
-                                    <div key={step} className="flex items-center">
-                                        {step > 1 && (
-                                            <div className={`w-12 h-0.5 ${
-                                                step <= currentStep ? 'bg-amber-400' : 'bg-base-300'
-                                            }`} />
-                                        )}
-                                        <button
-                                            onClick={() => step < currentStep && setCurrentStep(step)}
-                                            className={`flex flex-col items-center ${
-                                                step <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'
-                                            }`}
-                                            disabled={step > currentStep || isLoading}
-                                        >
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
-                                                step === currentStep
-                                                    ? 'border-amber-400 bg-amber-400 text-white'
-                                                    : step < currentStep
-                                                        ? 'border-amber-400 text-amber-500 bg-amber-50'
-                                                        : 'border-base-300 text-base-content/50 bg-base-100'
-                                                }`}
-                                            >
-                                                {step}
-                                            </div>
-                                            <span className={`text-xs mt-1.5 ${
-                                                step === currentStep ? 'text-amber-600 font-medium' : 'text-base-content/60'
-                                            }`}>
-                                                {step === 1 ? 'Tipo y día' : 'Horario'}
-                                            </span>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        
-                        {/* Form Content */}
-                        <div className="px-6 py-5">
-                            {renderStepContent()}
-                        </div>
-                        
-                        {/* Error message */}
-                        {errorMensaje && (
-                            <div className="mx-6 text-start mb-4 p-3 rounded-md bg-error/10 border border-error/20 flex items-center gap-3">
-                                <AlertCircle size={18} className="text-error" />
-                                <div className="flex-1 text-sm text-error">{errorMensaje}</div>
-                                <button 
-                                    className="p-1 rounded-md hover:bg-error/10"
-                                    onClick={() => setErrorMensaje(null)}
-                                >
-                                    <X size={14} className="text-error" />
-                                </button>
-                            </div>
-                        )}
-                        
-                        {/* Modal footer */}
-                        <div className="px-6 py-4 bg-base-200/50 border-t border-base-200 flex justify-end gap-3">
-                            <button 
-                                className="px-4 py-2 rounded-md text-sm font-medium text-base-content/70 hover:bg-base-300 hover:text-base-content transition-colors" 
-                                onClick={closeModal}
-                                disabled={isLoading}
-                            >
-                                Cancelar
-                            </button>
 
-                            {currentStep === 1 ? (
-                                <button 
-                                    className="px-4 py-2 rounded-md text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors"
-                                    onClick={() => setCurrentStep(2)}
+                            {/* Tabs */}
+                            <div className="flex gap-4 mt-4">
+                                <button
+                                    className={`py-2 flex items-center gap-1.5 border-b-2 transition-colors ${
+                                        activeTab === 'individual' 
+                                            ? 'border-amber-500 text-amber-700 font-medium' 
+                                            : 'border-transparent text-base-content/70 hover:text-base-content/90'
+                                    }`}
+                                    onClick={() => setActiveTab('individual')}
                                     disabled={isLoading}
                                 >
-                                    Siguiente
+                                    <Calendar size={15} />
+                                    Individual
                                 </button>
+                                <button
+                                    className={`py-2 flex items-center gap-1.5 border-b-2 transition-colors ${
+                                        activeTab === 'masiva' 
+                                            ? 'border-amber-500 text-amber-700 font-medium' 
+                                            : 'border-transparent text-base-content/70 hover:text-base-content/90'
+                                    }`}
+                                    onClick={() => setActiveTab('masiva')}
+                                    disabled={isLoading}
+                                >
+                                    <Upload size={15} />
+                                    Carga masiva
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Contenido */}
+                        <div className="p-6">
+                            {activeTab === 'individual' ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Columna izquierda */}
+                                    <div className="space-y-5">
+                                        {/* Día de semana */}
+                                        <div>
+                                            <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                                                <Calendar size={14} className="text-amber-600" />
+                                                Día de la semana
+                                            </label>
+                                            <div className="grid grid-cols-7 gap-1">
+                                                {diasSemana.map(dia => (
+                                                    <button
+                                                        key={dia}
+                                                        type="button"
+                                                        className={`py-2 text-center rounded text-sm transition-colors ${
+                                                            formData.diaSemana === dia
+                                                                ? 'bg-amber-100 text-amber-800 font-medium'
+                                                                : 'bg-base-200 text-base-content/70 hover:bg-base-300'
+                                                        }`}
+                                                        onClick={() => setFormData(prev => ({
+                                                            ...prev, diaSemana: dia
+                                                        }))}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {dia.slice(0, 2)}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Tipo restricción */}
+                                        <div>
+                                            <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                                                <Shield size={14} className="text-amber-600" />
+                                                Tipo de restricción
+                                            </label>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {tiposRestriccion.map(tipo => (
+                                                    <button
+                                                        key={tipo}
+                                                        type="button"
+                                                        className={`py-2.5 px-2 rounded border flex items-center justify-center gap-2 transition-colors ${
+                                                            formData.tipoRestriccion === tipo
+                                                                ? tipo === "DISPONIBLE"
+                                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                                    : 'bg-red-50 text-red-700 border-red-200'
+                                                                : 'bg-base-100 border-base-300 text-base-content/70'
+                                                        }`}
+                                                        onClick={() => setFormData(prev => ({
+                                                            ...prev, tipoRestriccion: tipo
+                                                        }))}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {tipo === "DISPONIBLE" ? (
+                                                            <>
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                    <path d="M20 6L9 17l-5-5" />
+                                                                </svg>
+                                                                Disponible
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                                    <path d="M18 6L6 18M6 6l12 12" />
+                                                                </svg>
+                                                                Bloqueado
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Columna derecha */}
+                                    <div className="space-y-5">
+                                        {/* Rango de horas */}
+                                        <div>
+                                            <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                                                <Clock3 size={14} className="text-amber-600" />
+                                                Rango horario
+                                            </label>
+
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {/* Hora inicio */}
+                                                <div>
+                                                    <label className="text-xs text-base-content/70 mb-1 block">
+                                                        Hora inicio
+                                                    </label>
+                                                    <select
+                                                        className="w-full h-9 px-2 rounded border border-base-300 bg-base-100 text-sm"
+                                                        name="horaInicio"
+                                                        value={formData.horaInicio}
+                                                        onChange={handleInputChange}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {horasDisponibles.map(hora => (
+                                                            <option key={`inicio-${hora}`} value={hora}>
+                                                                {formatHora(hora)}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                {/* Hora fin */}
+                                                <div>
+                                                    <label className="text-xs text-base-content/70 mb-1 block">
+                                                        Hora fin
+                                                    </label>
+                                                    <select
+                                                        className="w-full h-9 px-2 rounded border border-base-300 bg-base-100 text-sm"
+                                                        name="horaFin"
+                                                        value={formData.horaFin}
+                                                        onChange={handleInputChange}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {horasDisponibles
+                                                            .filter(hora => hora > formData.horaInicio)
+                                                            .map(hora => (
+                                                                <option key={`fin-${hora}`} value={hora}>
+                                                                    {formatHora(hora)}
+                                                                </option>
+                                                            ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Resumen */}
+                                        <div className={`mt-4 p-3 rounded text-sm ${
+                                            formData.tipoRestriccion === "DISPONIBLE"
+                                                ? "bg-emerald-50 border border-emerald-100"
+                                                : "bg-red-50 border border-red-100"
+                                        }`}>
+                                            <div className="flex items-center gap-1.5 mb-1 font-medium">
+                                                {formData.tipoRestriccion === "DISPONIBLE" ? (
+                                                    <span className="text-emerald-600">Horario disponible</span>
+                                                ) : (
+                                                    <span className="text-red-600">Horario bloqueado</span>
+                                                )}
+                                            </div>
+                                            <p className={
+                                                formData.tipoRestriccion === "DISPONIBLE" ? "text-emerald-700" : "text-red-700"
+                                            }>
+                                                Los días <span className="font-medium">{formData.diaSemana.toLowerCase()}</span> de <span className="font-medium">{formatHora(formData.horaInicio)}</span> a <span className="font-medium">{formatHora(formData.horaFin)}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             ) : (
-                                <button 
-                                    className="px-4 py-2 rounded-md text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center gap-2"
-                                    onClick={handleSubmit}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <Loader2 size={16} className="animate-spin" />
-                                            <span>Guardando...</span>
-                                        </>
-                                    ) : 'Guardar Restricción'}
-                                </button>
+                                <RestriccionUploader onSuccess={handleUploaderSuccess}
+                                docenteId={docenteId} />
                             )}
                         </div>
 
-                        {/* Close button */}
-                        <button 
-                            className="absolute right-4 top-4 w-8 h-8 rounded-full flex items-center justify-center text-base-content/60 hover:bg-base-200 hover:text-base-content transition-colors"
+                        {/* Mensaje de error */}
+                        {errorMensaje && (
+                            <div className="mx-6 mb-4 p-3 bg-red-50 border border-red-200 rounded flex items-center gap-2 text-sm text-red-700">
+                                <AlertCircle size={16} />
+                                <span>{errorMensaje}</span>
+                                <button
+                                    className="ml-auto hover:bg-red-100 p-1 rounded"
+                                    onClick={() => setErrorMensaje(null)}
+                                >
+                                    <X size={14} />
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Footer */}
+                        <div className="px-6 py-3 bg-base-200 border-t border-base-300 flex justify-between">
+                            <button
+                                className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded hover:bg-base-300 text-base-content/70"
+                                onClick={resetForm}
+                                disabled={isLoading}
+                            >
+                                <RefreshCw size={14} />
+                                Limpiar
+                            </button>
+                            
+                            <div className="flex gap-2">
+                                <button
+                                    className="px-3 py-1.5 rounded text-sm text-base-content/80 hover:bg-base-300"
+                                    onClick={closeModal}
+                                    disabled={isLoading}
+                                >
+                                    Cancelar
+                                </button>
+                                
+                                {activeTab === 'individual' && (
+                                    <button
+                                        className="px-4 py-1.5 rounded text-sm bg-amber-500 hover:bg-amber-600 text-white flex items-center gap-1.5"
+                                        onClick={handleSubmit}
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 size={14} className="animate-spin" />
+                                                Guardando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Calendar size={14} />
+                                                Guardar restricción
+                                            </>
+                                        )}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        
+                        {/* Botón cerrar */}
+                        <button
+                            className="absolute right-3 top-3 w-7 h-7 flex items-center justify-center rounded-full text-base-content/60 hover:bg-base-200"
                             onClick={closeModal}
                             disabled={isLoading}
-                            aria-label="Cerrar"
                         >
-                            <X size={18} />
+                            <X size={16} />
                         </button>
                     </div>
                 </div>

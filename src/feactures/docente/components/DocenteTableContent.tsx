@@ -9,7 +9,7 @@ interface DocenteTableContentProps {
   docentes: DocenteResponse[];
   onRestriccionCreated: () => void;
   onDelete: (id: UUID, nombre: string) => void;
-  onDocenteUpdated?: () => void; // Nuevo prop para actualización
+  onDocenteUpdated?: () => void; 
 }
 
 const EmptyState = () => (

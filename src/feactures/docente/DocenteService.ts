@@ -4,6 +4,7 @@ import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { RegistroRestriccionResponse } from "@/types/response/RegistroRestriccionResponse";
 import { UUID } from "crypto";
 import { DocenteRequest } from "@/types/request/DocenteRequest";
+import { promise } from "zod";
 
 export async function fetchDocentes() : Promise<DocenteResponse[]> {
   try {
@@ -108,6 +109,39 @@ export async function deleteDocente(id: UUID): Promise<{ success: boolean; messa
       data: errorData,
       status: status
     };
+  }
+}
+
+//metodo para registrar una restriccion del docente en batch
+export async function createRestriccionDocenteBatch(
+  restricciones: RestriccionRequest[]
+): Promise<{success: boolean; message: string}>  {
+  try {
+    const formattedRestricciones = restricciones.map(restriccion => ({
+      ...restriccion,
+      horaInicio: restriccion.horaInicio.substring(0, 5),
+      horaFin: restriccion.horaFin.substring(0, 5),
+    }));
+
+    // Ajustamos el tipo de respuesta para que coincida con RegistroResponse
+    const response = await apiClient.post<{success: boolean; message: string}>("/restriccion-docente/batch", formattedRestricciones);
+    
+    // Devolvemos directamente el objeto de la respuesta
+    return {
+      success: response.data.success, // Corregido "succes" a "success"
+      message: response.data.message || "Restricciones creadas correctamente",
+    };
+  } catch (error: any) {
+    console.error("Error creating docente restriccion batch:", error);
+    // Capturamos los mensajes de error del backend si existen
+    if (error.response && error.response.data) {
+      return {
+        success: false,
+        message: error.response.data.message || "Error al crear las restricciones"
+      };
+    }
+    // Error genérico si no podemos obtener detalles
+    throw error;
   }
 }
 

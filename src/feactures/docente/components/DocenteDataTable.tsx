@@ -57,7 +57,6 @@ export default function DocenteDataTable() {
       <DocenteTableContent 
         isLoading={isLoading} 
         docentes={currentItems}
-        onEdit={handleEditDocente}
         onDelete={handleDeleteDocente}
         onRestriccionCreated={loadDocentes}
       />
@@ -71,7 +70,7 @@ export default function DocenteDataTable() {
         />
       </div>
       
-      {/* Modal para edición */}
+      {/* Modal para edición - ahora usa las props unificadas */}
       {isEditModalOpen && docenteToEdit && (
         <AgregarDocenteModal 
           docenteToEdit={docenteToEdit}

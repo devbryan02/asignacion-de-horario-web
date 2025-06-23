@@ -68,7 +68,12 @@ export class VisualizarHorarioService {
   // Obtener horarios por sección
   static async obtenerHorariosPorSeccion(seccionID: string): Promise<HorarioDto[]> {
     try {
-      const response = await axios.get(`${API_URL}/horarios/seccion/${seccionID}`);
+      const response = await axios.get(`${API_URL}/horarios/seccion/${seccionID}`,{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`, 
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('Error al obtener horarios por sección:', error);
@@ -79,7 +84,12 @@ export class VisualizarHorarioService {
   // Obtener horarios por docente
   static async obtenerHorariosPorDocente(docenteID: string): Promise<HorarioDto[]> {
     try {
-      const response = await axios.get(`${API_URL}/horarios/docente/${docenteID}`);
+      const response = await axios.get(`${API_URL}/horarios/docente/${docenteID}`,{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`, 
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('Error al obtener horarios por docente:', error);
@@ -90,7 +100,12 @@ export class VisualizarHorarioService {
   // Obtener horarios por periodo
   static async obtenerHorariosPorPeriodo(periodoID: string): Promise<HorarioDto[]> {
     try {
-      const response = await axios.get(`${API_URL}/horarios/periodo/${periodoID}`);
+      const response = await axios.get(`${API_URL}/horarios/periodo/${periodoID}`,{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`, 
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('Error al obtener horarios por periodo:', error);

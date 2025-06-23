@@ -154,7 +154,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
                                     <Clock size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-base-content">Restricciones Horarias</h3>
+                                    <h3 className="text-lg font-bold text-base-content text-start">Restricciones Horarias</h3>
                                     <p className="text-sm text-base-content/70">
                                         Para el docente <span className="font-medium text-amber-600">{docenteNombre}</span>
                                     </p>

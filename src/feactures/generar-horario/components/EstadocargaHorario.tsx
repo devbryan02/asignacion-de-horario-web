@@ -25,7 +25,8 @@ export default function EstadoCargaHorario() {
   ];
 
   useEffect(() => {
-    const totalDuration = 240000; // 4 minutos en milisegundos
+    // 30 segundos de duración total
+    const totalDuration = 30000; // 30 segundos en milisegundos
     const interval = 100;
     const incrementPerInterval = 100 / (totalDuration / interval);
 

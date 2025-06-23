@@ -106,7 +106,7 @@ export default function DashboardLayout({
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Header del sidebar con botón de cerrar en móvil */}
           <div className="px-3 py-3.5 border-b border-base-200 flex justify-between items-center">
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <div className="w-7 h-7 bg-primary/15 rounded-lg flex items-center justify-center text-primary border border-primary/20">
                 <CalendarClock className="w-4 h-4" />
               </div>
@@ -114,6 +114,20 @@ export default function DashboardLayout({
                 <div className="text-sm font-bold tracking-wide">PONTIFICIA</div>
                 <div className="text-xs text-base-content/60">
                   Sistema de Horarios
+                </div>
+                <div>
+                    <button
+                      className="mt-2 px-3 py-2 text-xs font-semibold bg-error/10 text-error rounded-md hover:bg-error/20 transition-colors flex items-center gap-2"
+                      onClick={() => {
+                        //borrar token y redirigir a la página de inicio
+                        localStorage.removeItem("token");
+                        window.location.href = "/";
+                      }}
+                      aria-label="Cerrar sesión"
+                    >
+                      <X size={14} />
+                      Cerrar sesión
+                    </button>
                 </div>
               </div>
             </div>

@@ -4,7 +4,6 @@ import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { RegistroRestriccionResponse } from "@/types/response/RegistroRestriccionResponse";
 import { UUID } from "crypto";
 import { DocenteRequest } from "@/types/request/DocenteRequest";
-import { promise } from "zod";
 
 export async function fetchDocentes() : Promise<DocenteResponse[]> {
   try {

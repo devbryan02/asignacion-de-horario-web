@@ -26,7 +26,7 @@ export default function EstadoCargaHorario() {
 
   useEffect(() => {
     // 30 segundos de duración total
-    const totalDuration = 30000; // 30 segundos en milisegundos
+    const totalDuration = 40000; // 40 segundos
     const interval = 100;
     const incrementPerInterval = 100 / (totalDuration / interval);
 
@@ -81,7 +81,7 @@ export default function EstadoCargaHorario() {
             </span>
           </div>
           <div className="text-xs opacity-60 mt-1">
-            Est: 4 min
+            Est: 40 sg
           </div>
         </div>
         

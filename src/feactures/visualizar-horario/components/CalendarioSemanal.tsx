@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useHorario } from '../hooks/useHorario';
 import { HorarioModal } from './HorarioModal';
-import {MapPin, User} from "lucide-react"
-import {formatTime} from "../horarioUtlis"
+import { MapPin, User } from "lucide-react";
+import { formatTime } from "../horarioUtlis";
+import { ExportarButton } from './ExportarButton';
+import ExportButtonPDF from './ExportButtonPDF';
 
 interface VistaHorarioSemanalProps {
   modo: 'seccion' | 'docente' | 'periodo';
@@ -69,6 +71,22 @@ export default function VistaHorarioSemanal({ modo, id }: VistaHorarioSemanalPro
               Vista semanal de los horarios programados
             </p>
           </div>
+          
+          {/* Botón de exportar */}
+          {!isLoading && !error && horarios.length > 0 && (
+            <div>
+              <ExportarButton 
+                horarios={horarios} 
+                tipo={modo} 
+                nombre={id} 
+              />
+              <ExportButtonPDF 
+                horarios={horarios} 
+                tipo={modo} 
+                nombre={id} 
+                className="ml-2" />
+            </div>
+          )}
         </div>
       </div>
 

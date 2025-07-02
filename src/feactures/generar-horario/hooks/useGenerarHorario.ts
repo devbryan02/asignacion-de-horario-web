@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { resolverHorario, GenerarHorarioResponse } from '../AsignacionHorarioService';
 import toast from 'react-hot-toast';
+import { UUID } from 'crypto';
 
-export function useGenerarHorario() {
+export function useGenerarHorario(periodoId: UUID) {
   const [isLoading, setIsLoading] = useState(false);
   const [resultado, setResultado] = useState<GenerarHorarioResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +15,7 @@ export function useGenerarHorario() {
     setIsLoading(true);
 
     try {
-      const response = await resolverHorario();
+      const response = await resolverHorario(periodoId);
       
       if (response.success) {
         setResultado(response.data);

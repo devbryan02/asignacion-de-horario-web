@@ -1,4 +1,5 @@
 import apiClient from "@/lib/axios";
+import { UUID } from "crypto";
 
 // Tipo para la respuesta de generación de horario
 export interface GenerarHorarioResponse {
@@ -24,9 +25,10 @@ export interface ServiceResponse {
  * Resuelve la generación de un horario utilizando el algoritmo optimizado
  * @returns Información sobre el horario generado
  */
-export const resolverHorario = async (): Promise<ServiceResponse> => {
+export const resolverHorario = async (periodoId : UUID): Promise<ServiceResponse> => {
   try {
-    const response = await apiClient.post<GenerarHorarioResponse>("/horario/resolver");
+    // Configurar el periodoId en el requesparam
+    const response = await apiClient.post<GenerarHorarioResponse>(`/horario/resolver?periodoId=${periodoId}`);
     
     return {
       success: true,

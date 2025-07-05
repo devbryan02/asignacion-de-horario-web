@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { resolverHorario, GenerarHorarioResponse } from '../AsignacionHorarioService';
 import toast from 'react-hot-toast';
 import { UUID } from 'crypto';
+import Swal from 'sweetalert2';
 
 export function useGenerarHorario(periodoId: UUID) {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +16,19 @@ export function useGenerarHorario(periodoId: UUID) {
     setIsLoading(true);
 
     try {
+
+      const confirmacion = await Swal.fire({
+        title: 'Confirmar generación de horario',
+        text: '¿Estás seguro de que deseas generar el horario para este periodo?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, generar',
+        cancelButtonText: 'Cancelar'
+      });
+      if (!confirmacion.isConfirmed) {
+        return; 
+      }
+      // Llamar al servicio para generar el horario
       const response = await resolverHorario(periodoId);
       
       if (response.success) {

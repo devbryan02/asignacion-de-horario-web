@@ -129,7 +129,7 @@ export default function Home() {
             </div>
             
             <div className="card-body p-4 sm:p-6">
-              {activeTab === 'login' ? <LoginForm /> : <RegisterForm />}
+              {activeTab === 'login' ? <LoginForm /> : null }
               
               <div className="divider text-xs text-base-content/50 my-2 sm:my-4">Acceso institucional</div>
               

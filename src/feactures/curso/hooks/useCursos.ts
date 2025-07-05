@@ -73,6 +73,21 @@ export function useCursos() {
   const handleCreateCurso = async (curso: CursoRequest): Promise<CursoResponse> => {
     try {
       setIsLoading(true);
+      //use swal before creating the course
+      const result = await Swal.fire({
+        title: '¿Está seguro?',
+        //mensge mas detallado
+        text: "Esta acción creará un nuevo curso con los datos proporcionados. Asegúrese de que la información sea correcta.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, crear curso',
+        cancelButtonText: 'Cancelar'
+      });
+      if (!result.isConfirmed) {
+        return Promise.reject("Creación de curso cancelada por el usuario");
+      }
       const newCurso = await createCurso(curso);
       setCursos(prevCursos => [...prevCursos, newCurso]);
       //refrescar la lista de cursos

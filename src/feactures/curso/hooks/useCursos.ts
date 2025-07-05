@@ -192,9 +192,26 @@ const handleAsignarSeccionesBulk = async (
       cursoId,
       seccionesIds,
       docenteId: docenteId || null as any, // Si no se seleccionó un docente, enviamos null
-      modo: modo || "ASIGNAR" // ASIGNAR o DESASIGNAR
+      modo: modo || "PRESENCIAL" // ASIGNAR o DESASIGNAR
     };
 
+    // Mostrar mensaje de confirmación antes de enviar la solicitud
+    const confirmacion = await Swal.fire({
+      title: '¿Está seguro?',
+      text: `¿Desea asignar secciones seleccionadas al docente?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, asignar',
+      cancelButtonText: 'Cancelar'
+    });
+    if (!confirmacion.isConfirmed) {
+      return {
+        success: false,
+        message: "Asignación de secciones cancelada por el usuario"
+      };
+    }
     const result = await addSeccionesBulkService(request);
     
     if (result.success) {

@@ -5,6 +5,9 @@ import { fetchPeriodosAcademicos } from '@/feactures/periodo-academico/PeriodoAc
 import { PeriodoAcademico } from '@/feactures/periodo-academico/types';
 import type { UUID } from 'crypto';
 import { GenerarHorarioResponse } from '../AsignacionHorarioService';
+import EstadoCargaHorario from './EstadocargaHorario';
+import ErrorGeneracionHorario from './ErrorGeneracionHorario';
+import ResultadoGeneracionHorario from './ResultadoGeneracionHorario';
 
 interface BotonGenerarHorarioProps {
   className?: string;
@@ -13,6 +16,7 @@ interface BotonGenerarHorarioProps {
   onError?: (mensaje: string) => void;
   onIniciar?: () => void;
 }
+
 export default function BotonGenerarHorario({
   className = '',
   variant = 'primary',
@@ -24,9 +28,13 @@ export default function BotonGenerarHorario({
   const [selectedPeriodoId, setSelectedPeriodoId] = useState<UUID | null>(null);
   const [loadingPeriodos, setLoadingPeriodos] = useState(true);
 
-  console.log('Component rendering:', { periodos: periodos.length, selectedPeriodoId, loadingPeriodos });
-  console.log('Selected Periodo ID:', selectedPeriodoId);
-  const { isLoading, generarHorario } = useGenerarHorario(selectedPeriodoId as UUID);
+  const { 
+    isLoading, 
+    resultado, 
+    error, 
+    generarHorario, 
+    resetearResultado 
+  } = useGenerarHorario(selectedPeriodoId as UUID);
 
   useEffect(() => {
     const loadPeriodos = async () => {
@@ -38,25 +46,30 @@ export default function BotonGenerarHorario({
         }
       } catch (error) {
         console.error('Error loading periodos:', error);
+        onError?.('Error al cargar los períodos académicos');
       } finally {
         setLoadingPeriodos(false);
       }
     };
 
     loadPeriodos();
-  }, []);
+  }, [onError]);
 
   const handleClick = async () => {
-  if (!selectedPeriodoId) return;
-  
-  try {
-    onIniciar?.();
-    await generarHorario(); // El hook maneja internamente el resultado
-  } catch (error) {
-    const mensaje = error instanceof Error ? error.message : 'Error desconocido al generar el horario';
-    onError?.(mensaje);
-  }
-};
+    if (!selectedPeriodoId) return;
+    
+    try {
+      onIniciar?.();
+      await generarHorario();
+      
+      if (resultado) {
+        onHorarioGenerado?.(resultado);
+      }
+    } catch (error) {
+      const mensaje = error instanceof Error ? error.message : 'Error desconocido al generar el horario';
+      onError?.(mensaje);
+    }
+  };
 
   const getButtonClass = () => {
     let baseClass = `btn ${className}`;
@@ -75,6 +88,26 @@ export default function BotonGenerarHorario({
     }
   };
 
+  // Renderizado condicional basado en el estado
+  if (isLoading) {
+    return <EstadoCargaHorario />;
+  }
+
+  if (error) {
+    return <ErrorGeneracionHorario 
+      mensaje={error} 
+      onReiniciar={resetearResultado}
+      errorCode="GEN-001"
+    />;
+  }
+
+  if (resultado) {
+    return <ResultadoGeneracionHorario 
+      resultado={resultado}
+      onReiniciar={resetearResultado}
+    />;
+  }
+
   return (
     <div className="flex flex-row items-end gap-3">
       <div className="form-control flex-1">
@@ -85,7 +118,7 @@ export default function BotonGenerarHorario({
           className="select select-bordered w-full"
           value={selectedPeriodoId || ''}
           onChange={(e) => setSelectedPeriodoId(e.target.value as UUID)}
-          disabled={loadingPeriodos}
+          disabled={loadingPeriodos || isLoading}
         >
           {loadingPeriodos ? (
             <option disabled>Cargando períodos...</option>

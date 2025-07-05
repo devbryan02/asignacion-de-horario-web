@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Asignación de Horario (Frontend)
 
-## Getting Started
+Este proyecto es el frontend de un sistema de **asignación de horarios** para instituciones educativas, desarrollado en **Next.js** y **TypeScript**. Permite gestionar horarios académicos, docentes, aulas, cursos, periodos y secciones de manera eficiente y visual.
 
-First, run the development server:
+## Tabla de Contenidos
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [Descripción General](#descripción-general)
+- [Características Principales](#características-principales)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Instalación y Ejecución](#instalación-y-ejecución)
+- [Aporte y Propósito](#aporte-y-propósito)
+
+---
+
+## Descripción General
+
+La aplicación permite a administradores y personal académico realizar la gestión de la oferta académica y horarios, incluyendo la asignación de cursos a docentes, la administración de aulas, periodos académicos y la visualización de horarios generados. Está pensada como una interfaz moderna y ágil para facilitar la planificación educativa y evitar conflictos de horarios.
+
+## Características Principales
+
+- **Gestión de Docentes**: Alta, edición y filtrado de docentes, incluyendo restricciones horarias.
+- **Gestión de Aulas**: Registro, actualización, filtrado por tipo (teórico/laboratorio) y capacidad.
+- **Gestión de Periodos Académicos**: Manejo de periodos con paginación y búsqueda avanzada.
+- **Gestión de Cursos y Secciones**: Asignación de secciones a cursos y cursos a docentes.
+- **Visualización de Horarios**: Calendario semanal interactivo por sección, periodo o docente.
+- **Filtros, búsquedas y paginación** en todas las entidades principales.
+- **Interfaz amigable**: Uso extensivo de modales, notificaciones y confirmaciones para la mejor experiencia de usuario.
+
+## Estructura del Proyecto
+
+```
+asignacion-de-horario-web/
+│
+├── src/
+│   ├── feactures/
+│   │   ├── aula/                # Gestión de aulas
+│   │   ├── curso/               # Gestión de cursos y asignaciones
+│   │   ├── docente/             # Gestión de docentes y restricciones
+│   │   ├── periodo-academico/   # Gestión de periodos académicos
+│   │   ├── seccion-academica/   # Gestión de secciones
+│   │   └── visualizar-horario/  # Visualización de horarios en calendario
+│   ├── components/              # Componentes reutilizables
+│   ├── lib/                     # Utilidades y configuración (ej: axios)
+│   └── types/                   # Tipos y modelos TypeScript
+├── public/                      # Recursos públicos (imágenes, favicon)
+├── app/                         # Entrypoint y rutas Next.js
+├── package.json
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Las carpetas `feactures` están organizadas por dominio funcional, siguiendo buenas prácticas de modularidad y escalabilidad.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tecnologías Utilizadas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **[Next.js](https://nextjs.org/)** (App Router)
+- **TypeScript**
+- **React** (con hooks personalizados)
+- **Axios** (consumo de API REST)
+- **Tailwind CSS** (o similar) para estilos modernos y responsivos
+- **React Toastify/SweetAlert** para notificaciones y confirmaciones
+- **Vercel** (opcional) para despliegue
 
-## Learn More
+## Instalación y Ejecución
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clonar el repositorio:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone https://github.com/devbryan02/asignacion-de-horario-web.git
+   cd asignacion-de-horario-web
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Instalar dependencias:**
 
-## Deploy on Vercel
+   ```bash
+   npm install
+   # o
+   yarn install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Ejecutar en desarrollo:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm run dev
+   # o
+   yarn dev
+   ```
+
+4. **Abrir en el navegador:**  
+   [http://localhost:3000](http://localhost:3000)
+
+> **Nota:** Es necesario contar con el backend corriendo para el funcionamiento completo (API en `localhost:8080` por defecto).
+
+## Aporte y Propósito
+
+Este proyecto fue desarrollado como aporte personal para optimizar la gestión académica en instituciones educativas. Destaca por su estructura limpia, uso de tecnologías modernas y enfoque en la experiencia de usuario. Puede ser usado como ejemplo profesional en tu CV, mostrando habilidades en desarrollo frontend avanzado, arquitectura de aplicaciones y buenas prácticas.
+
+---
+
+¿Te gustaría contribuir o tienes sugerencias? ¡Tus aportes son bienvenidos!

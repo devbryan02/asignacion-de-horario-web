@@ -92,7 +92,6 @@ export interface RegistroResponse {
 }
 
 // Método para registrar secciones en bulk
-// Método para registrar secciones en bulk - CORREGIDO
 export const addSeccionesAndDocentesBulk = async (request: CursoSeccionBulkRequest): Promise<RegistroResponse> => {
   try {
     const response = await apiClient.post<RegistroResponse>("/curso-seccion-docente/bulk", request);

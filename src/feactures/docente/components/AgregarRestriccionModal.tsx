@@ -145,7 +145,7 @@ function AgregarRestriccionModal({ docenteId, docenteNombre, onRestriccionCreate
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/45 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/45 backdrop-blur-sm overflow-y-auto">
                     <div className="w-full max-w-2xl bg-base-100 rounded-lg shadow-xl overflow-hidden animate-fadeIn">
                         {/* Header */}
                         <div className="px-6 py-4 border-b border-base-200">

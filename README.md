@@ -4,7 +4,7 @@ Este proyecto es el frontend de un sistema de **asignación de horarios** automa
 
 ## Vista Previa
 
-<img src="preview.png" alt="Vista previa de la aplicación" width="800" />
+<img src="/public/preview.png" alt="Vista previa de la aplicación" width="800" />
 
 
 ## Tabla de Contenidos

@@ -1,6 +1,11 @@
 # Sistema de Asignación de Horario (Frontend)
 
-Este proyecto es el frontend de un sistema de **asignación de horarios** para instituciones educativas, desarrollado en **Next.js** y **TypeScript**. Permite gestionar horarios académicos, docentes, aulas, cursos, periodos y secciones de manera eficiente y visual.
+Este proyecto es el frontend de un sistema de **asignación de horarios** automatica con Optaplanner en el backend para instituciones educativas, desarrollado en **Next.js** y **TypeScript**. Permite gestionar horarios académicos, docentes, aulas, cursos, periodos y secciones de manera eficiente y visual.
+
+## Vista Previa
+
+<img src="preview.png" alt="Vista previa de la aplicación" width="800" />
+
 
 ## Tabla de Contenidos
 

@@ -6,28 +6,29 @@ function PersonalizacionPage() {
 
     // Temas disponibles en Daisy UI
     const temas = [
-        "light",
+        "garden",
         "dark",
-        "bumblebee",
         "emerald",
         "corporate",
         "forest",
         "dracula",
-        "business",
-        "dim"
+        "nord",
+        "dim",
+        "cupcake",
     ];
 
     // Información de cada tema para mostrar colores de previsualización
     const temasInfo = {
-        light: { nombre: "Light", descripcion: "Tema claro clásico" },
+        garden: { nombre: "Garden", descripcion: "Tonos naturales y frescos" },
         dark: { nombre: "Dark", descripcion: "Modo oscuro elegante" },
-        bumblebee: { nombre: "Bumblebee", descripcion: "Amarillo y negro" },
         emerald: { nombre: "Emerald", descripcion: "Tonos verdes frescos" },
         corporate: { nombre: "Corporate", descripcion: "Profesional y limpio" },
         forest: { nombre: "Forest", descripcion: "Tonos naturales verdes" },
         dracula: { nombre: "Dracula", descripcion: "Oscuro con acentos morados" },
+        nord: { nombre: "Nord", descripcion: "Tonos fríos y oscuros" },
         business: { nombre: "Business", descripcion: "Formal y sobrio" },
-        dim: { nombre: "Dim", descripcion: "Oscuro con bajo contraste" }
+        dim: { nombre: "Dim", descripcion: "Oscuro con bajo contraste" },
+        cupcake: { nombre: "Cupcake", descripcion: "Colores pastel suaves" },
     };
 
     // Maneja el cambio de tema

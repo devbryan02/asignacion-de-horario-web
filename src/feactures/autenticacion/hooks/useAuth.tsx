@@ -1,14 +1,13 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { loginUser, registerUser } from "@/feactures/autenticacion/authService";
+import { loginUser } from "@/feactures/autenticacion/authService";
 import { AuthRequest, AuthResponse, RegisterResponse } from "@/feactures/autenticacion/types";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  user: any | null;
+  user: {token: string, role?: string} | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (credentials: AuthRequest) => Promise<AuthResponse>;
-  register: (userData: AuthRequest) => Promise<RegisterResponse>;
   logout: () => void;
   error: string | null;
 }
@@ -38,34 +37,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     try {
       const response = await loginUser(credentials);
+      
       if (response.success) {
-        setUser({ token: response.token });
+        
+        // Actualizamos el estado
+        setUser({ 
+          token: response.token, 
+          role: response.role 
+        });
         setIsAuthenticated(true);
-      } else {
-        setError(response.message || "Login failed");
-      }
-      setIsLoading(false);
-      return response;
-    } catch (err: any) {
-      setError(err.message || "An error occurred during login");
-      setIsLoading(false);
-      throw err;
-    }
-  };
 
-  const register = async (userData: AuthRequest): Promise<RegisterResponse> => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await registerUser(userData);
-      setIsLoading(false);
+        // Verificación del rol y redirección
+        const userRole = response.role?.toUpperCase();
+        console.log('Role for redirect:', userRole);
+
+        if (userRole === 'ADMIN' || userRole === 'COORDINADOR') {
+          setIsLoading(false); // Importante: desactivar loading antes de redirigir
+          console.log('Redirigiendo a admin...');
+          router.push('/');
+        } else {
+          setIsLoading(false);
+          console.log('Redirigiendo a dashboard...');
+          router.push('/dashboard');
+        }
+
+        return response;
+      } else {
+        setError(response.message || "Error al iniciar sesión");
+        setIsLoading(false);
+      }
+      
       return response;
     } catch (err: any) {
-      setError(err.message || "An error occurred during registration");
+      setError(err.message || "Ocurrió un error durante el inicio de sesión");
       setIsLoading(false);
       throw err;
     }
-  };
+};
+
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -76,7 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, login, register, logout, error }}
+      value={{ user, isAuthenticated, isLoading, login, logout, error }}
     >
       {children}
     </AuthContext.Provider>

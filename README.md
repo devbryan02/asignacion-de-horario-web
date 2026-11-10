@@ -1,105 +1,71 @@
-# Sistema de Asignación de Horario (Frontend)
+# Asignación de horarios — frontend
 
-Este proyecto es el frontend de un sistema de **asignación de horarios** automatica con Optaplanner en el backend para instituciones educativas, desarrollado en **Next.js** y **TypeScript**. Permite gestionar horarios académicos, docentes, aulas, cursos, periodos y secciones de manera eficiente y visual.
+Interfaz con Next.js 16.4.6, React/React DOM 19.3.1 y Node.js 26 LTS.
+Gestiona recursos académicos, genera horarios mediante la API Java y permite
+consultarlos en calendario y exportarlos a Excel o PDF.
 
-## Vista Previa
+## Desarrollo
 
-<img src="/public/preview.png" alt="Vista previa de la aplicación" width="800" />
+Usar Node 26.13.0 (también indicado en `.nvmrc`) y npm 11.20.0.
 
-
-## Tabla de Contenidos
-
-- [Descripción General](#descripción-general)
-- [Características Principales](#características-principales)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Tecnologías Utilizadas](#tecnologías-utilizadas)
-- [Instalación y Ejecución](#instalación-y-ejecución)
-- [Aporte y Propósito](#aporte-y-propósito)
-
----
-
-## Descripción General
-
-La aplicación permite a administradores y personal académico realizar la gestión de la oferta académica y horarios, incluyendo la asignación de cursos a docentes, la administración de aulas, periodos académicos y la visualización de horarios generados. Está pensada como una interfaz moderna y ágil para facilitar la planificación educativa y evitar conflictos de horarios.
-
-## Características Principales
-
-- **Gestión de Docentes**: Alta, edición y filtrado de docentes, incluyendo restricciones horarias.
-- **Gestión de Aulas**: Registro, actualización, filtrado por tipo (teórico/laboratorio) y capacidad.
-- **Gestión de Periodos Académicos**: Manejo de periodos con paginación y búsqueda avanzada.
-- **Gestión de Cursos y Secciones**: Asignación de secciones a cursos y cursos a docentes.
-- **Visualización de Horarios**: Calendario semanal interactivo por sección, periodo o docente.
-- **Filtros, búsquedas y paginación** en todas las entidades principales.
-- **Interfaz amigable**: Uso extensivo de modales, notificaciones y confirmaciones para la mejor experiencia de usuario.
-
-## Estructura del Proyecto
-
-```
-asignacion-de-horario-web/
-│
-├── src/
-│   ├── feactures/
-│   │   ├── aula/                # Gestión de aulas
-│   │   ├── curso/               # Gestión de cursos y asignaciones
-│   │   ├── docente/             # Gestión de docentes y restricciones
-│   │   ├── periodo-academico/   # Gestión de periodos académicos
-│   │   ├── seccion-academica/   # Gestión de secciones
-│   │   └── visualizar-horario/  # Visualización de horarios en calendario
-│   ├── components/              # Componentes reutilizables
-│   ├── lib/                     # Utilidades y configuración (ej: axios)
-│   └── types/                   # Tipos y modelos TypeScript
-├── public/                      # Recursos públicos (imágenes, favicon)
-├── app/                         # Entrypoint y rutas Next.js
-├── package.json
-└── README.md
+```powershell
+npm ci
+npm run dev
 ```
 
-Las carpetas `feactures` están organizadas por dominio funcional, siguiendo buenas prácticas de modularidad y escalabilidad.
+La web se sirve en `http://localhost:3000`. El código cliente consume
+`http://localhost:8080/api/v1`; esta dirección todavía no está externalizada.
+El contenedor de la API debe publicar el puerto 8080 para el navegador local.
 
-## Tecnologías Utilizadas
+## Verificación
 
-- **[Next.js](https://nextjs.org/)** (App Router)
-- **TypeScript**
-- **React** (con hooks personalizados)
-- **Axios** (consumo de API REST)
-- **Tailwind CSS** (o similar) para estilos modernos y responsivos
-- **React Toastify/SweetAlert** para notificaciones y confirmaciones
-- **Vercel** (opcional) para despliegue
+```powershell
+npm run lint
+npm run typecheck
+npm run build
+npx playwright install chromium
+npm test
+# Lint, tipos, build y pruebas de navegador:
+npm run verify
+```
 
-## Instalación y Ejecución
+Playwright inicia el build productivo en `127.0.0.1:3000`, con API simulada
+y datos sintéticos. Ese puerto debe estar libre. Comprueba login rechazado,
+páginas, validación de periodos, calendario, archivos Excel/PDF e importación
+de restricciones. También caracteriza el proxy inactivo heredado.
 
-1. **Clonar el repositorio:**
+`eslint-suppressions.json` registra la deuda existente por archivo, regla y
+cantidad; las reglas siguen activas para nuevos errores. `npm run lint:debt`
+muestra los errores sin esa línea base y devuelve un código no cero mientras
+exista deuda. Las advertencias siguen visibles en el lint normal.
 
-   ```bash
-   git clone https://github.com/devbryan02/asignacion-de-horario-web.git
-   cd asignacion-de-horario-web
-   ```
+TypeScript 6.0.3 y ESLint 9.39.5 son las versiones estables compatibles con
+los plugins de esta versión de Next. Sus peers aún no admiten TypeScript 7
+ni ESLint 10; no se utilizaron `--force` ni `--legacy-peer-deps`. npm marca
+ESLint 9 como fuera de soporte; queda pendiente el salto cuando los plugins
+permitan ESLint 10.
 
-2. **Instalar dependencias:**
+## Organización
 
-   ```bash
-   npm install
-   # o
-   yarn install
-   ```
+- `src/app/`: rutas App Router y dashboard.
+- `src/feactures/`: componentes, hooks y servicios por dominio; conservar la
+  escritura existente del directorio.
+- `src/components/`, `src/lib/`, `src/types/`: código compartido.
+- `public/`: assets y plantilla Excel.
+- `tests/`: regresiones de navegador con API simulada.
+- `vendor/xlsx-0.20.3.tgz`: distribución oficial de SheetJS, fijada localmente
+  porque el paquete npm público `xlsx` sigue en una versión antigua.
 
-3. **Ejecutar en desarrollo:**
+## Docker y autenticación pendiente
 
-   ```bash
-   npm run dev
-   # o
-   yarn dev
-   ```
+El Dockerfile usa Node 26 y construye la aplicación; el Compose común está en
+la raíz del workspace. Ejecutar `npm start` sirve un build ya generado.
 
-4. **Abrir en el navegador:**  
-   [http://localhost:3000](http://localhost:3000)
+`proxy.ts` conserva la ubicación raíz del antiguo `middleware.ts`. Con
+`src/app`, Next no lo descubre y no aplica esa protección de navegación.
+Además, el login guarda la sesión en localStorage y el proxy espera cookies.
+Activarlo y unificar la sesión pertenecen a la corrección funcional pendiente;
+la autorización real debe verificarse en la API.
 
-> **Nota:** Es necesario contar con el backend corriendo para el funcionamiento completo (API en `localhost:8080` por defecto).
-
-## Aporte y Propósito
-
-Este proyecto fue desarrollado como aporte personal para optimizar la gestión académica en instituciones educativas. Destaca por su estructura limpia, uso de tecnologías modernas y enfoque en la experiencia de usuario. Puede ser usado como ejemplo profesional en tu CV, mostrando habilidades en desarrollo frontend avanzado, arquitectura de aplicaciones y buenas prácticas.
-
----
-
-¿Te gustaría contribuir o tienes sugerencias? ¡Tus aportes son bienvenidos!
+El informe de migración y los puntos débiles están en `../docs/` del workspace,
+fuera de este repositorio Git independiente.

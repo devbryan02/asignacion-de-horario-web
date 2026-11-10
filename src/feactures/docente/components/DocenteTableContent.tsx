@@ -1,8 +1,8 @@
 import { DocenteResponse } from '@/types/response/DocenteResponse';
-import { Clock, Pencil, Trash2, Calendar, Loader2, AlertCircle, User } from 'lucide-react';
+import { Clock, Trash2, Calendar, Loader2, AlertCircle, User } from 'lucide-react';
 import AgregarRestriccionModal from './AgregarRestriccionModal';
 import AgregarDocenteModal from './AgregarDocenteModal';
-import { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 
 interface DocenteTableContentProps {
   isLoading: boolean;

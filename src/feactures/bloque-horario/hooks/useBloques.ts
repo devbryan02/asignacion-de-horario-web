@@ -1,13 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Swal from 'sweetalert2';
-import { UUID } from 'crypto';
 import {
-    getBloquesHorario,
-    createBloqueHorario,
-    updateBloqueHorario,
-    deleteBloqueHorario
+  getBloquesHorario, createBloqueHorario, updateBloqueHorario, deleteBloqueHorario
 } from '../BloqueService';
 import { BloqueHorario, BloqueHorarioRequest, BloqueHorarioResponse } from '../types';
+import type { UUID } from 'node:crypto';
 
 export function useBloques() {
     // Estados principales

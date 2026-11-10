@@ -8,7 +8,7 @@ import { RestriccionRequest } from '@/types/request/RestriccionRequest';
 import { DiaSemana } from '@/types/DiaSemana';
 import { TipoRestriccion } from '@/types/TipoRestriccion';
 import toast from 'react-hot-toast';
-import { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 
 interface RestriccionUploaderProps {
   docenteId: UUID;
@@ -92,8 +92,8 @@ export default function RestriccionUploader({ docenteId, onSuccess }: Restriccio
       }
 
       // Formatear horas
-      let horaInicio = formatearHora(row.horaInicio);
-      let horaFin = formatearHora(row.horaFin);
+      const horaInicio = formatearHora(row.horaInicio);
+      const horaFin = formatearHora(row.horaFin);
 
       if (!horaInicio || !horaFin) {
         errors.push(`Fila ${index + 1}: Formato de hora incorrecto`);

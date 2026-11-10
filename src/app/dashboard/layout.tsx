@@ -2,25 +2,10 @@
 
 import React, { useState } from "react";
 import {
-  CalendarClock,
-  Clock4,
-  Settings,
-  LayoutDashboard,
-  Menu,
-  X,
-  Brain,
-  CalendarRange,
-  BookOpen,
-  ChevronRight,
-  ChevronDown,
-  Boxes,
-  GraduationCap,
-  Building2,
-  Palette
+  CalendarClock, Clock4, Settings, LayoutDashboard, Menu, X, Brain, CalendarRange, BookOpen, ChevronRight, ChevronDown, Boxes, GraduationCap, Building2, Palette
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Metadata } from "next";
 
 // Estructura de los menús organizados por grupos
 const menuGroups = [

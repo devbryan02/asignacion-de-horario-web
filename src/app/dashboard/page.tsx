@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Clipboard, Download, BarChart2, PieChart,
-  Building2, GraduationCap, BookOpen, Calendar
-} from "lucide-react";
+import { PieChart, Building2, GraduationCap, BookOpen, Calendar } from "lucide-react";
 import { fetchAulas } from "@/feactures/aula/AulaService";
 import { fetchDocentes } from "@/feactures/docente/DocenteService";
 import { fetchSeccionAcademica } from "@/feactures/seccion-academica/SeccionAcademicaService";

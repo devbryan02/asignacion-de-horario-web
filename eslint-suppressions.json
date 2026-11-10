@@ -1,0 +1,213 @@
+{
+  "src/app/dashboard/page.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/app/dashboard/personalizacion/page.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/app/dashboard/visualizar/page.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 2
+    }
+  },
+  "src/app/page.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/aula/AulaService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/feactures/aula/hooks/useAula.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 2
+    }
+  },
+  "src/feactures/autenticacion/components/LoginForm.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/feactures/autenticacion/hooks/useAuth.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/bloque-horario/BloqueService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    }
+  },
+  "src/feactures/bloque-horario/components/EditarBloqueModal.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/bloque-horario/hooks/useBloques.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/curso/CursoService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/feactures/curso/components/AgregarCursoModal.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/curso/components/AsignarSeccionModal.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/curso/components/CursoDataTable.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/curso/components/CursoTableContent.tsx": {
+    "react/no-unescaped-entities": {
+      "count": 2
+    }
+  },
+  "src/feactures/curso/components/MultipleSelectUnidad.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/feactures/curso/hooks/useCursos.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/feactures/docente/DocenteService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/feactures/docente/components/AgregarDocenteModal.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 2
+    }
+  },
+  "src/feactures/docente/components/AgregarRestriccionModal.tsx": {
+    "react-hooks/immutability": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/docente/components/RestriccionUploader.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/feactures/docente/hooks/useDocentes.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/generar-horario/AsignacionHorarioService.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/feactures/generar-horario/components/ResultadoGeneracionHorario.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/feactures/periodo-academico/components/EditarModal.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/feactures/periodo-academico/components/SearchBar.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "react-hooks/use-memo": {
+      "count": 1
+    }
+  },
+  "src/feactures/periodo-academico/hooks/usePeriodo.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 2
+    }
+  },
+  "src/feactures/restriccion/hooks/useRestricciones.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/seccion-academica/SeccionAcademicaService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/feactures/seccion-academica/components/AgregarSeccionModal.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/feactures/seccion-academica/components/EditarSeccionModal.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/feactures/seccion-academica/components/SeccionTableContent.tsx": {
+    "react-hooks/purity": {
+      "count": 1
+    }
+  },
+  "src/feactures/seccion-academica/hooks/useSecciones.ts": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/feactures/unidadad-academica/UnidadAcademicaCard.tsx": {
+    "react-hooks/purity": {
+      "count": 3
+    },
+    "react/jsx-key": {
+      "count": 4
+    }
+  },
+  "src/feactures/visualizar-horario/VisualizarHorarioService.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/feactures/visualizar-horario/components/CalendarioSemanal.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/feactures/visualizar-horario/hooks/useHorario.ts": {
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  }
+}

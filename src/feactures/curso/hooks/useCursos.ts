@@ -2,18 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import { CursoResponse } from "@/types/response/CursoResponse";
 import { CursoRequest } from "@/types/request/CursoRequest";
 import {
-  fetchCursos,
-  createCurso,
-  updateCurso,
-  deleteCurso,
-  addSeccionesAndDocentesBulk as addSeccionesBulkService,
-  CursoSeccionBulkRequest,
-  RegistroResponse,
-  ApiErrorDelete
+  fetchCursos, createCurso, updateCurso, deleteCurso, addSeccionesAndDocentesBulk as addSeccionesBulkService, CursoSeccionBulkRequest, RegistroResponse, ApiErrorDelete
 } from "@/feactures/curso/CursoService";
 import toast from "react-hot-toast";
-import { UUID } from "crypto";
 import Swal from "sweetalert2";
+import type { UUID } from "node:crypto";
 
 // Tipo para los filtros de tipo de curso
 export type FilterTipo = {

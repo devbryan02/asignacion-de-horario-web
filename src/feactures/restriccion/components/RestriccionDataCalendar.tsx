@@ -1,15 +1,12 @@
 "use client";
 
-import { UUID } from "crypto";
 import { useRestricciones } from "../hooks/useRestricciones";
 import RestriccionHeader from './RestriccionHeader';
 import RestriccionDayCard from './RestriccionDayCard';
-import { 
-  RestriccionLoadingState, 
-  RestriccionErrorState, 
-  RestriccionEmptyDataState,
-  RestriccionNoSelectionState
+import {
+  RestriccionLoadingState, RestriccionErrorState, RestriccionEmptyDataState, RestriccionNoSelectionState
 } from './RestriccionEmptyState';
+import type { UUID } from "node:crypto";
 
 interface RestriccionDataCalendarProps {
   initialDocenteId?: UUID;

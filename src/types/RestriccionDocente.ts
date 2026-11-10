@@ -1,6 +1,6 @@
-import { UUID } from "crypto";
 import { DiaSemana } from "./DiaSemana";
 import { TipoRestriccion } from "./TipoRestriccion";
+import type { UUID } from "node:crypto";
 
 export interface RestriccionDocente {
     id: UUID;

@@ -1,7 +1,7 @@
 import apiClient from "@/lib/axios";
 import { Aula } from "@/types/AulaResponse";
-import { UUID } from "crypto";
 import axios, { AxiosError } from "axios";
+import type { UUID } from "node:crypto";
 
 export const fetchAulas = async (): Promise<Aula[]> => {
     try {

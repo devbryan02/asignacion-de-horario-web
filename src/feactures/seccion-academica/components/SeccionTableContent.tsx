@@ -1,6 +1,6 @@
 import { SeccionResponse } from '../types';
-import { PlusCircle, Edit, Trash2, Calendar, Users, BookOpen, Clock } from 'lucide-react';
-import { UUID } from 'crypto';
+import { PlusCircle, Edit, Trash2, Calendar, Users, Clock } from 'lucide-react';
+import type { UUID } from 'node:crypto';
 
 interface SeccionTableContentProps {
   isLoading: boolean;

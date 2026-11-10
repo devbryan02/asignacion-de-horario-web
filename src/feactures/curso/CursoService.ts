@@ -1,8 +1,8 @@
 import apiClient from "@/lib/axios";
 import { CursoRequest } from "@/types/request/CursoRequest";
 import { CursoResponse } from "@/types/response/CursoResponse";
-import { UUID } from "crypto";
 import axios, { AxiosError } from "axios";
+import type { UUID } from "node:crypto";
 
 export const fetchCursos = async (): Promise<CursoResponse[]> => {
   try {
@@ -66,8 +66,8 @@ export const deleteCurso = async (id: UUID): Promise<ApiErrorDelete> => {
     console.error(`Error deleting curso with ID ${id}:`, error);
 
     //extraer el mensaje de error
-    let errorMessage = error.response.data.message || error.response.data.error || error.message || "Error desconocido al eliminar el curso";
-    let status = error.response.status || 500;
+    const errorMessage = error.response.data.message || error.response.data.error || error.message || "Error desconocido al eliminar el curso";
+    const status = error.response.status || 500;
 
     return {
       message: errorMessage,

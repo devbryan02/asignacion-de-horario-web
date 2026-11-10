@@ -1,5 +1,5 @@
-import { UUID } from "crypto";
 import { RestriccionDocente } from "../RestriccionDocente";
+import type { UUID } from "node:crypto";
 
 // Interfaz principal para el docente
 export interface DocenteResponse {

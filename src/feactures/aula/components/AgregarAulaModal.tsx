@@ -1,6 +1,6 @@
 "use client";
 
-import { School as SchoolIcon, Loader2, X, CheckCircle2 } from "lucide-react";
+import { School as SchoolIcon, X, CheckCircle2 } from "lucide-react";
 import { AulaFormData } from "../hooks/useAula";
 
 interface AgregarAulaModalProps {

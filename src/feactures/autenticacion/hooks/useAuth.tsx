@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { loginUser } from "@/feactures/autenticacion/authService";
-import { AuthRequest, AuthResponse, RegisterResponse } from "@/feactures/autenticacion/types";
+import { AuthRequest, AuthResponse } from "@/feactures/autenticacion/types";
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {

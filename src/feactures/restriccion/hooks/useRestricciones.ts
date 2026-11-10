@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { fetchRestriccionByDocente } from '../RestriccionService';
 import { fetchDocentes } from '@/feactures/docente/DocenteService';
 import { RestriccionResponse } from '@/types/response/RestriccionResponse';
-import { Docente } from '@/types/response/DocenteResponse';
-import { UUID } from 'crypto';
+import { DocenteResponse as Docente } from '@/types/response/DocenteResponse';
 import { DiaSemana } from '@/types/DiaSemana';
+import type { UUID } from 'node:crypto';
 
 export function useRestricciones(initialDocenteId?: UUID) {
   const [docentes, setDocentes] = useState<Docente[]>([]);

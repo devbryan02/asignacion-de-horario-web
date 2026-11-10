@@ -1,4 +1,4 @@
-import { Docente } from '@/types/response/DocenteResponse';
+import { DocenteResponse as Docente } from '@/types/response/DocenteResponse';
 import { User, Search, X, Loader2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 

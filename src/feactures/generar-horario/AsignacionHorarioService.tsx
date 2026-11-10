@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 // Tipo para la respuesta de generación de horario
 export interface GenerarHorarioResponse {

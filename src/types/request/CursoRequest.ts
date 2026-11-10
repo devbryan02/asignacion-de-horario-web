@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 
 export type CursoRequest = {
     nombre: string;

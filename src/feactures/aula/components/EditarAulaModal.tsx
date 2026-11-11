@@ -1,8 +1,8 @@
 "use client";
 
-import { X, School as SchoolIcon, CheckCircle2, Loader2 } from "lucide-react";
+import { X, School as SchoolIcon, CheckCircle2 } from "lucide-react";
 import { AulaFormData } from "../hooks/useAula";
-import { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 interface EditarAulaModalProps {
   isOpen: boolean;

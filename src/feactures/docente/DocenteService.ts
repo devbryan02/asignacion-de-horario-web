@@ -2,8 +2,8 @@ import apiClient from "@/lib/axios";
 import { DocenteResponse } from "@/types/response/DocenteResponse";
 import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { RegistroRestriccionResponse } from "@/types/response/RegistroRestriccionResponse";
-import { UUID } from "crypto";
 import { DocenteRequest } from "@/types/request/DocenteRequest";
+import type { UUID } from "node:crypto";
 
 export async function fetchDocentes() : Promise<DocenteResponse[]> {
   try {

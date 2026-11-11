@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { PlusCircle, Clock, Calendar } from 'lucide-react';
 import AgregarBloqueModal from './AgregarBloqueModal';
-import { useBloques } from '../hooks/useBloques';
-import { on } from 'events';
 
 type bloqueHeaderProps = {
     onAddBloque?: () => void;

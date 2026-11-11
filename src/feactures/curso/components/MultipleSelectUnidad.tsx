@@ -2,9 +2,9 @@
 
 import { fetchUnidadAcademica } from "@/feactures/unidadad-academica/UnidadAcademicaService";
 import { useEffect, useState } from "react";
-import { UUID } from "crypto";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import type { UUID } from "node:crypto";
 
 interface UnidadAcademica {
   id: UUID;

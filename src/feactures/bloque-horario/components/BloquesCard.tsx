@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Clock, Calendar, Edit, Trash2, AlertCircle } from 'lucide-react';
 import { BloqueHorario } from '../types';
 import EditarBloqueModal from './EditarBloqueModal';
-import { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 
 
 interface BloquesCardProps {

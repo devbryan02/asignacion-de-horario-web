@@ -1,4 +1,4 @@
-import { Search, X, Database, LayoutGrid } from "lucide-react";
+import { Search, X, Database } from "lucide-react";
 
 interface CursoSearchBarProps {
   searchQuery: string;

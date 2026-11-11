@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { Book, PlusCircle, Save, X, Info, Clock, BookOpen, Building2 } from "lucide-react";
 import { CursoRequest } from "@/types/request/CursoRequest";
 import { CursoResponse } from "@/types/response/CursoResponse";
-import { UUID } from "crypto";
 import toast from "react-hot-toast";
 import { fetchUnidadAcademica } from "@/feactures/unidadad-academica/UnidadAcademicaService";
 import MultipleUnidadAcademicaSelect from "@/feactures/curso/components/MultipleSelectUnidad";
+import type { UUID } from "node:crypto";
 
 interface UnidadAcademica {
   id: UUID;

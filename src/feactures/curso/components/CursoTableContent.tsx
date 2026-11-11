@@ -1,6 +1,6 @@
 import { BookOpen, Pencil, Trash2, Users } from "lucide-react";
 import { CursoResponse } from "@/types/response/CursoResponse";
-import { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 interface CursoTableContentProps {
   cursos: CursoResponse[];

@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Aula } from '@/types/AulaResponse';
 import { fetchAulas, createAula, updateAula, deleteAula } from '../AulaService';
 import toast from 'react-hot-toast';
-import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
+import type { UUID } from 'node:crypto';
 
 export type FilterTypes = {
   teorico: boolean;

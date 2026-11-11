@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 import { useCursos } from "@/feactures/curso/hooks/useCursos";
 import CursoTableHeader from "@/feactures/curso/components/CursoTableHeader";
 import CursoTableContent from "@/feactures/curso/components/CursoTableContent";
-import AgregarCursoModal from "@/feactures/curso/components/AgregarCursoModal";
+import AgregarCursoModal from "@/feactures/curso/components/AgregarCursoModal"; // Importar función para cargar docentes
 import AsignarSeccionesModal from "./AsignarSeccionModal";
 import CursoPagination from "./CursoPagination";
 import { CursoResponse } from "@/types/response/CursoResponse";
 import { SeccionResponse } from "@/feactures/seccion-academica/types";
 import { fetchSeccionAcademica } from "@/feactures/seccion-academica/SeccionAcademicaService";
-import { fetchDocentes } from "@/feactures/docente/DocenteService"; // Importar función para cargar docentes
+import { fetchDocentes } from "@/feactures/docente/DocenteService";
 import { DocenteResponse } from "@/types/response/DocenteResponse";
-import { UUID } from "crypto";
 import { RegistroResponse } from "../CursoService";
+import type { UUID } from "node:crypto";
 
 export default function CursoDataTable() {
   // Usar el hook de cursos que proporciona toda la lógica de negocio

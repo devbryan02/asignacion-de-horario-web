@@ -1,6 +1,6 @@
 import apiClient from "@/lib/axios";
 import { BloqueHorario, BloqueHorarioRequest, BloqueHorarioResponse } from "./types";
-import { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 
 export async function getBloquesHorario(): Promise<BloqueHorario[]> {

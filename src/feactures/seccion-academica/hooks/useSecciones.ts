@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { SeccionResponse, SeccionRequest } from '../types';
-import { 
-  fetchSeccionAcademica, 
-  createSeccionAcademica, 
-  updateSeccionAcademica,
-  deleteSeccionAcademica 
+import {
+  fetchSeccionAcademica, createSeccionAcademica, updateSeccionAcademica, deleteSeccionAcademica
 } from '../SeccionAcademicaService';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
-import { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 
 export function useSecciones() {
   // Estados

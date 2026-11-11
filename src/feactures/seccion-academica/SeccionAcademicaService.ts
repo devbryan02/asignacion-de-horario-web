@@ -1,6 +1,6 @@
 import apiClient from "@/lib/axios";
 import { SeccionRequest, SeccionResponse } from "./types";
-import { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 // Interfaz de respuesta para operaciones
 export interface ServiceResponse {

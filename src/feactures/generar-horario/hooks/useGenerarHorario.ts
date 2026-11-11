@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { resolverHorario, GenerarHorarioResponse } from '../AsignacionHorarioService';
 import toast from 'react-hot-toast';
-import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
+import type { UUID } from 'node:crypto';
 
 export function useGenerarHorario(periodoId: UUID) {
   const [isLoading, setIsLoading] = useState(false);

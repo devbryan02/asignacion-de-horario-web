@@ -1,10 +1,9 @@
-import { Book, Filter, X, Check, Plus, BookOpen, Beaker } from "lucide-react";
+import { Book, Filter, X, BookOpen, Beaker } from "lucide-react";
 import AgregarCursoModal from "./AgregarCursoModal";
 import { CursoRequest } from "@/types/request/CursoRequest";
-import { UUID } from "crypto";
-import { useState } from "react";
 import CursoSearchBar from "./CursoSearchBar";
 import { CursoResponse } from "@/types/response/CursoResponse";
+import type { UUID } from "node:crypto";
 
 interface CursoTableHeaderProps {
   onCursoCreated: (curso: CursoRequest) => Promise<CursoResponse | void>;

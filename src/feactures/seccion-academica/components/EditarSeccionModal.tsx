@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Save, Calendar, BookOpen, AlertCircle, School } from 'lucide-react';
 import { SeccionRequest, SeccionResponse } from '../types';
 import { fetchPeriodosAcademicos } from '@/feactures/periodo-academico/PeriodoAcademicaService';
-import { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 
 interface EditarSeccionModalProps {
   seccion: SeccionResponse;
@@ -52,7 +52,7 @@ export default function EditarSeccionModal({
         if (periodoActual) {
           setFormData(prev => ({
             ...prev,
-            periodoAcademicoId: periodoActual.id
+            periodoAcademicoId: periodoActual.id as SeccionRequest['periodoAcademicoId']
           }));
         }
       } catch (error) {

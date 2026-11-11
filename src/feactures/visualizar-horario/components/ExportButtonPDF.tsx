@@ -1,9 +1,8 @@
 import React from 'react';
 import { File } from 'lucide-react';
-import { HorarioDto } from '../VisualizarHorarioService';
+import { HorarioDto,indexToDiaSemana } from '../VisualizarHorarioService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { indexToDiaSemana } from '../VisualizarHorarioService';
 import Swal from 'sweetalert2';
 
 interface ExportButtonPDFProps {

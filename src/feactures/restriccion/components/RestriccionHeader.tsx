@@ -1,5 +1,5 @@
 import { Calendar, User } from 'lucide-react';
-import { Docente } from '@/types/response/DocenteResponse';
+import { DocenteResponse as Docente } from '@/types/response/DocenteResponse';
 import RestriccionDocenteSelect from './RestriccionDocenteSelect';
 
 interface RestriccionHeaderProps {

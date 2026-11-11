@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import LoginForm from "@/feactures/autenticacion/components/LoginForm";
-import RegisterForm from "@/feactures/autenticacion/components/RegisterForm";
 import { AuthProvider } from "@/feactures/autenticacion/hooks/useAuth";
-import { 
-  LogIn, UserPlus, Clock, Calendar, CheckSquare, BookOpen, 
-  Users, School, ChevronRight, Award, BarChart, Layers
+import {
+  LogIn, UserPlus, Clock, CheckSquare, BookOpen, Users, School, Award, BarChart, Layers
 } from "lucide-react";
 
 export default function Home() {

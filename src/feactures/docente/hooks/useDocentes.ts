@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { DocenteResponse } from '@/types/response/DocenteResponse';
 import { fetchDocentes, updateDocente, DocenteUpdateRequest, deleteDocente } from '../DocenteService';
 import toast from 'react-hot-toast';
-import { UUID } from 'crypto';
 import Swal from 'sweetalert2';
+import type { UUID } from 'node:crypto';
 
 export type FilterHours = {
   menos15: boolean;

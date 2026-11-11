@@ -7,8 +7,8 @@ import { RestriccionRequest } from "@/types/request/RestriccionRequest";
 import { DiaSemana } from "@/types/DiaSemana";
 import { TipoRestriccion } from "@/types/TipoRestriccion";
 import toast from "react-hot-toast";
-import { UUID } from "crypto";
 import RestriccionUploader from "./RestriccionUploader";
+import type { UUID } from "node:crypto";
 
 interface AgregarRestriccionModalProps {
     docenteId: UUID;

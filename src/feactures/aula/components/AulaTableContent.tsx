@@ -1,7 +1,7 @@
 "use client";
 
 import { Aula } from '@/types/AulaResponse';
-import { School, Pencil, Trash2, BookOpen, Computer, Loader2, ChevronRight, ArrowUpDown, Users } from 'lucide-react';
+import { School, Pencil, Trash2, BookOpen, Computer, ArrowUpDown, Users } from 'lucide-react';
 
 interface AulaTableContentProps {
   isLoading: boolean;

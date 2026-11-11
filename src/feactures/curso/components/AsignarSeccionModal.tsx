@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Check, X, Search, Users, CheckCircle, AlertTriangle, FileText, School, Layers } from "lucide-react";
-import { UUID } from "crypto";
+import { Check, X, Search, Users, CheckCircle, AlertTriangle, School, Layers } from "lucide-react";
 import { SeccionResponse } from "@/feactures/seccion-academica/types";
 import { RegistroResponse } from "../CursoService";
 import { DocenteResponse } from "@/types/response/DocenteResponse";
+import type { UUID } from "node:crypto";
 
 interface AsignarSeccionModalProps {
   isOpen: boolean;

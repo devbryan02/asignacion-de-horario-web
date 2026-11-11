@@ -1,5 +1,5 @@
   import React from 'react';
-import { Download, FileSpreadsheet } from 'lucide-react';
+import { FileSpreadsheet } from 'lucide-react';
 import { VisualizarHorarioService, HorarioDto } from '../VisualizarHorarioService';
 
 interface ExportarButtonProps {

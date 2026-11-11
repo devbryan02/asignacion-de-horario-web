@@ -3,11 +3,11 @@ import { CalendarCheck, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { fetchPeriodosAcademicos } from '@/feactures/periodo-academico/PeriodoAcademicaService';
 import { PeriodoAcademico } from '@/feactures/periodo-academico/types';
-import type { UUID } from 'crypto';
 import { GenerarHorarioResponse } from '../AsignacionHorarioService';
 import EstadoCargaHorario from './EstadocargaHorario';
 import ErrorGeneracionHorario from './ErrorGeneracionHorario';
 import ResultadoGeneracionHorario from './ResultadoGeneracionHorario';
+import type { UUID } from 'node:crypto';
 
 interface BotonGenerarHorarioProps {
   className?: string;
@@ -72,7 +72,7 @@ export default function BotonGenerarHorario({
   };
 
   const getButtonClass = () => {
-    let baseClass = `btn ${className}`;
+    const baseClass = `btn ${className}`;
 
     switch (variant) {
       case 'primary':

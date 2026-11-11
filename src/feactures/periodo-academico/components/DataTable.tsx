@@ -2,11 +2,11 @@
 
 import { usePeriodoAcademico } from "../hooks/usePeriodo";
 import { PeriodoAcademicoSearchBar } from "./SearchBar";
-import { PeriodoPagination } from "./Pagination"; // Importar el componente de paginación
-import { useState, useEffect } from "react";
+import { PeriodoPagination } from "./Pagination";
+import { useState } from "react";
 import { PeriodoAcademico } from "../types";
 import { Calendar, Edit, Trash2, Plus, Loader2, AlertCircle, CalendarRange } from "lucide-react";
-import { AgregarPeriodoAcademicoModal } from "./AgregarModal";
+import { AgregarPeriodoAcademicoModal } from "./AgregarModal"; // Importar el componente de paginación
 import { EditarPeriodoAcademicoModal } from "./EditarModal";
 
 export const PeriodoAcademicoDataTable = () => {
